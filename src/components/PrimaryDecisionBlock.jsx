@@ -8,7 +8,12 @@ import {
   ArrowDown,
   Megaphone,
   Brain,
-  GitCommit
+  GitCommit,
+  Clock,
+  Globe,
+  Mail,
+  Video,
+  FileText
 } from 'lucide-react';
 
 export default function PrimaryDecisionBlock({ 
@@ -18,7 +23,15 @@ export default function PrimaryDecisionBlock({
   isExecuted, 
   onScrollToTimeline 
 }) {
-  const { primaryInsight, secondaryInsights, primaryAction, journey, supportingEvidence } = customer;
+  const { primaryInsight, primaryAction, journey } = customer;
+
+  // Sample recent chronological interactions for overview preview
+  const recentInteractionsPreview = [
+    { title: "Viewed myPricing product page (4th visit)", channel: "Website", badgeColor: "bg-blue-100 text-blue-800 border-blue-200", time: "Today · 10:42 AM" },
+    { title: "Opened & clicked Pricing Strategy campaign email", channel: "Email", badgeColor: "bg-indigo-100 text-indigo-800 border-indigo-200", time: "Today · 9:15 AM" },
+    { title: "Downloaded 'Dynamic Pricing Playbook' (PDF)", channel: "Website", badgeColor: "bg-purple-100 text-purple-800 border-purple-200", time: "3 days ago" },
+    { title: "Attended 'Competitive Pricing Strategy' webinar (42 mins)", channel: "Webinar", badgeColor: "bg-amber-100 text-amber-800 border-amber-200", time: "5 days ago" }
+  ];
 
   return (
     <div className="space-y-6">
@@ -60,7 +73,7 @@ export default function PrimaryDecisionBlock({
         {/* Core AI Decision Flow (Insight ➔ Recommendation) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start pt-1">
           
-          {/* LEFT: PRIMARY B2B MARKETING INSIGHT (7 Cols) */}
+          {/* LEFT: PRIMARY B2B MARKETING INSIGHT & WHY ADA THINKS THIS (7 Cols) */}
           <div className="lg:col-span-7 bg-slate-50/80 border border-slate-200/80 rounded-xl p-5 space-y-4">
             
             <div className="space-y-2">
@@ -85,10 +98,10 @@ export default function PrimaryDecisionBlock({
               </p>
             </div>
 
-            {/* Supporting Evidence Checklist Rows */}
+            {/* Supporting Evidence Checklist Rows (Why ADA thinks this) */}
             <div className="space-y-2 pt-1 border-t border-slate-200/60">
               <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Key Supporting Signals:
+                Why ADA thinks this:
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 {primaryInsight.whyAdaThinksThis.map((sig, idx) => (
@@ -102,15 +115,16 @@ export default function PrimaryDecisionBlock({
               </div>
             </div>
 
-            {/* Secondary Signals Footer */}
+            {/* Quiet Related AI Signals Footer */}
             <div className="pt-2 border-t border-slate-200/60 flex items-center space-x-2 text-xs">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Other Signals:</span>
-              <div className="flex items-center flex-wrap gap-1.5 text-[11px]">
-                {secondaryInsights.map((sec) => (
-                  <span key={sec.id} className="px-2 py-0.5 bg-white text-slate-600 border border-slate-200 rounded-md font-medium">
-                    {sec.title} ({sec.confidence}%)
-                  </span>
-                ))}
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0">Related Signals:</span>
+              <div className="flex items-center flex-wrap gap-1.5 text-[11px] text-slate-600">
+                <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md font-medium">
+                  High Campaign Responsiveness
+                </span>
+                <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md font-medium">
+                  Expansion Readiness (88%)
+                </span>
               </div>
             </div>
 
@@ -176,32 +190,39 @@ export default function PrimaryDecisionBlock({
 
       </div>
 
-      {/* 2. SUPPORTING EVIDENCE CHECKLIST & B2B LIFECYCLE STAGE */}
+      {/* 2. RECENT INTERACTIONS PREVIEW (CHRONOLOGICAL) & B2B LIFECYCLE STAGE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
         
-        {/* Supporting Evidence Grid (7 Cols) */}
+        {/* Recent Interactions Chronological Summary (7 Cols) */}
         <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-xl p-4 space-y-3 shadow-2xs">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Supporting Evidence Summary</span>
+              <Clock className="w-4 h-4 text-indigo-600" />
+              <span>Recent Interactions</span>
             </h3>
             <button 
               onClick={onScrollToTimeline}
               className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer"
             >
-              <span>View full interaction timeline</span>
-              <ArrowDown className="w-3 h-3" />
+              <span>View full timeline</span>
+              <ArrowRight className="w-3 h-3" />
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            {supportingEvidence.map((ev, idx) => (
-              <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center space-x-2">
-                <span className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-[10px] shrink-0">
-                  ✓
-                </span>
-                <span className="font-semibold text-slate-800 truncate">{ev.text}</span>
+          {/* Chronological List of Actual Customer Activity */}
+          <div className="space-y-2 text-xs">
+            {recentInteractionsPreview.map((item, idx) => (
+              <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+                <div className="flex items-center space-x-2 truncate pr-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+                  <span className="font-semibold text-slate-800 truncate">{item.title}</span>
+                </div>
+                <div className="flex items-center space-x-2 shrink-0">
+                  <span className={`px-2 py-0.2 text-[10px] font-bold rounded border ${item.badgeColor}`}>
+                    {item.channel}
+                  </span>
+                  <span className="text-[11px] text-slate-400 font-mono">{item.time}</span>
+                </div>
               </div>
             ))}
           </div>
