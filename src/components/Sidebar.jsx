@@ -24,16 +24,20 @@ import {
 
 export default function Sidebar({ activeSubTab = "Overview", onSelectSubTab }) {
   const [c360Expanded, setC360Expanded] = useState(true);
+  const [cdpExpanded, setCdpExpanded] = useState(true);
 
-  const c360Items = [
-    { label: "Overview", icon: Building2, count: null },
-    { label: "Accounts", icon: Users, count: "1.4k" },
+  const account360Items = [
+    { label: "Accounts", sub: "TechGear Europe", icon: Users, count: "1.4k" },
+  ];
+
+  const cdpItems = [
     { label: "Segments", icon: Layers, count: "48" },
     { label: "Events", icon: Activity, count: "840k" },
     { label: "Attributes", icon: Sliders, count: "52" },
-    { label: "Tags", icon: Tag, count: "28" },
-    { label: "Data sources", icon: Database, count: "6" },
-    { label: "Consent & Preferences", icon: ShieldCheck, count: null }
+    { label: "Tags & DNC", icon: Tag, count: "28" },
+    { label: "Duplicates", icon: Copy, count: "2" },
+    { label: "Data Sources", icon: Database, count: "6" },
+    { label: "Compliance & GDPR", icon: ShieldCheck, count: "Verified" }
   ];
 
   return (
@@ -46,126 +50,132 @@ export default function Sidebar({ activeSubTab = "Overview", onSelectSubTab }) {
           </div>
           <div>
             <div className="font-bold text-white tracking-wide text-base leading-none">ADA CAIP</div>
-            <div className="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Boostmyshop Marketing</div>
+            <div className="text-[10px] text-slate-400 font-medium tracking-wider uppercase mt-0.5">Boostmyshop CDP</div>
           </div>
         </div>
         <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded">
-          v4.2
+          Enterprise
         </span>
       </div>
 
       {/* Navigation Links */}
-      <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-        {/* Home */}
-        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
-          <Home className="w-4 h-4 text-slate-400" />
-          <span>Home</span>
-        </button>
-
-        {/* Campaigns */}
-        <button className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
-          <div className="flex items-center space-x-3">
-            <Megaphone className="w-4 h-4 text-slate-400" />
-            <span>Campaigns</span>
-          </div>
-          <span className="px-1.5 py-0.5 text-[11px] font-semibold bg-indigo-500 text-white rounded-full">
-            12
-          </span>
-        </button>
-
-        {/* Account 360 - Active Accordion Header */}
-        <div className="pt-1">
-          <button 
-            onClick={() => setC360Expanded(!c360Expanded)}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-indigo-950/60 text-white font-semibold text-left border border-indigo-800/50 shadow-xs cursor-pointer"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-5 h-5 rounded flex items-center justify-center bg-indigo-600 text-white">
-                <Zap className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-indigo-200">Account 360</span>
-            </div>
-            {c360Expanded ? (
-              <ChevronDown className="w-4 h-4 text-indigo-400" />
-            ) : (
-              <ChevronRight className="w-4 h-4 text-indigo-400" />
-            )}
+      <div className="flex-1 overflow-y-auto py-4 px-3 space-y-2">
+        
+        {/* Main Section 1: Core Navigation */}
+        <div className="space-y-0.5">
+          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
+            <Home className="w-4 h-4 text-slate-400" />
+            <span>Home</span>
           </button>
 
-          {/* Sub Navigation Items (Account 360 tabs + Global CDP Modules) */}
-          {c360Expanded && (
-            <div className="ml-3 pl-3 border-l border-indigo-900/50 my-1 space-y-0.5">
-              {[
-                { label: "Overview", icon: Building2, count: null },
-                { label: "Interactions", icon: MessageSquare, count: "18" },
-                { label: "Commercial & Usage", icon: CreditCard, count: "Active" },
-                { label: "Attributes", icon: Sliders, count: "52" },
-                { label: "Accounts", icon: Users, count: "1.4k" },
-                { label: "Segments", icon: Layers, count: "48" },
-                { label: "Events", icon: Activity, count: "840k" },
-                { label: "Tags & DNC", icon: Tag, count: "28" },
-                { label: "Data Sources", icon: Database, count: "6" },
-                { label: "Duplicates", icon: Copy, count: "2" },
-                { label: "Compliance & GDPR", icon: ShieldCheck, count: "Verified" }
-              ].map((item) => {
-                const ItemIcon = item.icon;
-                const isActive = activeSubTab === item.label;
-                return (
-                  <button
-                    key={item.label}
-                    onClick={() => onSelectSubTab && onSelectSubTab(item.label)}
-                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-all text-left cursor-pointer ${
-                      isActive 
-                        ? 'bg-indigo-600 text-white font-medium shadow-xs' 
-                        : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2.5 truncate">
-                      <ItemIcon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
-                      <span className="truncate">{item.label}</span>
-                    </div>
-                    {item.count && (
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded font-normal ${
-                        isActive ? 'bg-indigo-700 text-indigo-100' : 'text-slate-500 bg-slate-800'
-                      }`}>
-                        {item.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+          <button className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
+            <div className="flex items-center space-x-3">
+              <Megaphone className="w-4 h-4 text-slate-400" />
+              <span>Campaigns</span>
             </div>
-          )}
+            <span className="px-1.5 py-0.5 text-[11px] font-semibold bg-indigo-500 text-white rounded-full">
+              12
+            </span>
+          </button>
         </div>
 
-        {/* Conversations */}
-        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
-          <MessageSquare className="w-4 h-4 text-slate-400" />
-          <span>Conversations</span>
-        </button>
+        {/* SECTION 2: ACCOUNT 360 (Entity-Level Experience) */}
+        <div className="pt-2">
+          <div className="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Account 360
+          </div>
 
-        {/* Analytics */}
-        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
-          <BarChart3 className="w-4 h-4 text-slate-400" />
-          <span>Analytics</span>
-        </button>
+          <button 
+            onClick={() => onSelectSubTab && onSelectSubTab("Overview")}
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border font-semibold text-left transition-all cursor-pointer ${
+              ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab)
+                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
+                : 'bg-slate-800/60 text-slate-300 hover:text-white hover:bg-slate-800 border-slate-700/60'
+            }`}
+          >
+            <div className="flex items-center space-x-2.5 truncate">
+              <Building2 className={`w-4 h-4 ${["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? 'text-white' : 'text-indigo-400'}`} />
+              <div className="truncate">
+                <div className="text-xs font-bold leading-tight">Accounts</div>
+                <div className="text-[10px] font-normal opacity-80 truncate">TechGear Europe</div>
+              </div>
+            </div>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
+              ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab)
+                ? 'bg-indigo-700 text-indigo-100'
+                : 'bg-slate-700 text-slate-300'
+            }`}>
+              1.4k
+            </span>
+          </button>
+        </div>
 
-        {/* Channels */}
-        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
-          <Radio className="w-4 h-4 text-slate-400" />
-          <span>Channels</span>
-        </button>
+        {/* SECTION 3: CDP PLATFORM CAPABILITIES */}
+        <div className="pt-3">
+          <div className="px-3 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>CDP Capabilities</span>
+            <span className="text-[9px] font-normal text-slate-400">Platform</span>
+          </div>
 
-        {/* Integrations */}
-        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
-          <Layers className="w-4 h-4 text-slate-400" />
-          <span>Integrations</span>
-        </button>
+          <div className="space-y-0.5">
+            {cdpItems.map((item) => {
+              const ItemIcon = item.icon;
+              const isActive = activeSubTab === item.label;
+              return (
+                <button
+                  key={item.label}
+                  onClick={() => onSelectSubTab && onSelectSubTab(item.label)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left cursor-pointer ${
+                    isActive 
+                      ? 'bg-indigo-600 text-white font-bold shadow-xs' 
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2.5 truncate">
+                    <ItemIcon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {item.count && (
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded font-medium ${
+                      isActive ? 'bg-indigo-700 text-indigo-100' : 'text-slate-500 bg-slate-800'
+                    }`}>
+                      {item.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* SECTION 4: Engagement & Channels */}
+        <div className="pt-3 border-t border-slate-800/80 space-y-0.5">
+          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
+            <MessageSquare className="w-4 h-4 text-slate-400" />
+            <span>Conversations</span>
+          </button>
+
+          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
+            <BarChart3 className="w-4 h-4 text-slate-400" />
+            <span>Analytics</span>
+          </button>
+
+          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
+            <Radio className="w-4 h-4 text-slate-400" />
+            <span>Channels</span>
+          </button>
+
+          <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
+            <Layers className="w-4 h-4 text-slate-400" />
+            <span>Integrations</span>
+          </button>
+        </div>
+
       </div>
 
       {/* Settings */}
       <div className="p-3 border-t border-slate-800">
-        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left">
+        <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors font-medium text-left cursor-pointer">
           <Settings className="w-4 h-4 text-slate-400" />
           <span>Settings</span>
         </button>

@@ -175,28 +175,99 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* 2. COMPACT ACCOUNT HEADER (Answers "WHO IS THIS ACCOUNT?") */}
-          <div className="px-6 pt-4">
-            <CustomerHeader 
-              customer={customer}
-              onStartConversation={() => setIsStartChatOpen(true)}
-              onActionSelect={handleHeaderActionSelect}
-            />
+          {/* CHECK IF USER IS IN ACCOUNT 360 VS GLOBAL CDP */}
+          {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? (
+            /* ACCOUNT 360 HEADER & TABS (Answers "WHO IS THIS ACCOUNT?") */
+            <div className="px-6 pt-4">
+              <CustomerHeader 
+                customer={customer}
+                onStartConversation={() => setIsStartChatOpen(true)}
+                onActionSelect={handleHeaderActionSelect}
+              />
 
-            {/* 3. TABS DIRECTLY BELOW HEADER */}
-            <CustomerTabs 
-              activeTab={activeTab} 
-              onSelectTab={(tab) => {
-                setActiveTab(tab);
-                setActiveSubTab(tab);
-              }} 
-            />
-          </div>
+              {/* TABS DIRECTLY BELOW HEADER */}
+              <CustomerTabs 
+                activeTab={activeTab} 
+                onSelectTab={(tab) => {
+                  setActiveTab(tab);
+                  setActiveSubTab(tab);
+                }} 
+              />
+            </div>
+          ) : (
+            /* GLOBAL PLATFORM-LEVEL CDP HEADER */
+            <div className="bg-white border-b border-slate-200 px-8 py-5 shadow-2xs">
+              <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider flex items-center space-x-1">
+                    <span>CDP Platform Capability</span>
+                    <span>•</span>
+                    <span className="text-slate-400 font-normal">Global View</span>
+                  </div>
+                  <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                    {activeSubTab === "Segments" && "Audience Segments & Targeting"}
+                    {activeSubTab === "Events" && "Real-Time Telemetry & Event Ingestion"}
+                    {activeSubTab === "Tags & DNC" && "Global Taxonomy, Tags & Do-Not-Contact Rules"}
+                    {activeSubTab === "Duplicates" && "Identity Resolution & Profile Merging"}
+                    {activeSubTab === "Data Sources" && "Data Pipeline Connections & SDK Telemetry"}
+                    {activeSubTab === "Compliance & GDPR" && "Data Privacy, GDPR & Governance Control"}
+                  </h1>
+                  <p className="text-xs text-slate-500">
+                    {activeSubTab === "Segments" && "Manage customer segment definitions, rule builders, and activation destinations."}
+                    {activeSubTab === "Events" && "Live event ingestion log from web SDKs, APIs, and ecommerce platform webhooks."}
+                    {activeSubTab === "Tags & DNC" && "Global account tags, suppression lists, and do-not-contact compliance policies."}
+                    {activeSubTab === "Duplicates" && "AI-detected duplicate account matches and identity merging queue."}
+                    {activeSubTab === "Data Sources" && "Manage real-time integrations, API keys, Web SDKs, and ingestion health."}
+                    {activeSubTab === "Compliance & GDPR" && "Global consent management, data erasure requests, and privacy audit log."}
+                  </p>
+                </div>
+
+                <button 
+                  onClick={() => {
+                    setActiveTab("Overview");
+                    setActiveSubTab("Overview");
+                  }}
+                  className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer shadow-2xs"
+                >
+                  <span>View TechGear Europe (Account 360)</span>
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* MAIN PAGE DECISION-ORIENTED CONTENT HIERARCHY */}
           <main className="p-6 max-w-7xl w-full mx-auto space-y-6">
             
-            {activeTab === "Overview" ? (
+            {activeSubTab === "Segments" ? (
+              <SegmentsView customer={customer} onShowToast={showToast} />
+            ) : activeSubTab === "Tags & DNC" ? (
+              <TagsDncView customer={customer} onShowToast={showToast} />
+            ) : activeSubTab === "Duplicates" ? (
+              <DuplicatesView customer={customer} onShowToast={showToast} />
+            ) : activeSubTab === "Data Sources" ? (
+              <DataSourcesView customer={customer} onShowToast={showToast} />
+            ) : activeSubTab === "Compliance & GDPR" ? (
+              <ComplianceView customer={customer} onShowToast={showToast} />
+            ) : activeSubTab === "Events" ? (
+              <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <h2 className="text-lg font-bold text-slate-900">Global Real-Time Event Stream</h2>
+                <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
+                  Viewing global telemetry event stream across 840k events. To view events specifically for TechGear Europe, navigate to Account 360 → Interactions.
+                </p>
+                <button 
+                  onClick={() => {
+                    setActiveTab("Interactions");
+                    setActiveSubTab("Interactions");
+                  }}
+                  className="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-xs hover:bg-indigo-700 cursor-pointer"
+                >
+                  View TechGear Europe Interactions
+                </button>
+              </div>
+            ) : activeTab === "Overview" ? (
               <>
                 {/* 4. PRIMARY HERO DECISION BLOCK (BEHAVIOUR ➔ INSIGHT ➔ EVIDENCE ➔ RECOMMENDATION ➔ ACTION) */}
                 <PrimaryDecisionBlock 
@@ -234,16 +305,6 @@ export default function App() {
 
                 </div>
               </>
-            ) : activeSubTab === "Segments" ? (
-              <SegmentsView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Tags & DNC" ? (
-              <TagsDncView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Duplicates" ? (
-              <DuplicatesView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Data Sources" ? (
-              <DataSourcesView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Compliance & GDPR" ? (
-              <ComplianceView customer={customer} onShowToast={showToast} />
             ) : activeTab === "Interactions" ? (
               <InteractionsTab 
                 customer={customer}
@@ -264,27 +325,7 @@ export default function App() {
                 onViewSegmentDetails={(attr) => showToast(`Filtering CDP segments using attribute: ${attr.name}`)}
                 onViewInsightEvidence={(attr) => showToast(`ADA Evidence: ${attr.aiDerived?.evidence?.join(" • ") || "Verified signal"}`)}
               />
-            ) : (
-              /* TAB ALTERNATIVE STATES */
-              <div className="p-12 bg-white rounded-2xl border border-slate-200 shadow-sm text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">{activeTab} View</h3>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">
-                  Detailed data view for {activeTab} of TechGear Europe ({customer.id}). All account data points are unified and continuously synthesized in real-time by ADA CAIP.
-                </p>
-                <button 
-                  onClick={() => {
-                    setActiveTab("Overview");
-                    setActiveSubTab("Overview");
-                  }}
-                  className="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-xs hover:bg-indigo-700 cursor-pointer"
-                >
-                  Return to Overview & AI Recommendations
-                </button>
-              </div>
-            )}
+            ) : null}
 
             {/* BOTTOM VALUE PROPOSITION PARADIGM BANNER */}
             <ValuePropBanner />
