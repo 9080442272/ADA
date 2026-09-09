@@ -190,45 +190,67 @@ export default function PrimaryDecisionBlock({
 
       </div>
 
-      {/* 2. RECENT INTERACTIONS PREVIEW (CHRONOLOGICAL) & B2B LIFECYCLE STAGE */}
+      {/* 2. LATEST ACTIVITY (FRESH NON-DUPLICATED EVENTS) & COMPACT ACCOUNT LIFECYCLE STAGE */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
         
-        {/* Recent Interactions Chronological Summary (7 Cols) */}
-        <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-xl p-4 space-y-3 shadow-2xs">
+        {/* Latest Activity Summary (7 Cols) */}
+        <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-xl p-4 space-y-3 shadow-2xs flex flex-col justify-between">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
               <Clock className="w-4 h-4 text-indigo-600" />
-              <span>Recent Interactions</span>
+              <span>Latest Activity</span>
             </h3>
             <button 
               onClick={onViewFullTimeline}
               className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer"
             >
-              <span>View full timeline →</span>
+              <span>View timeline →</span>
             </button>
           </div>
 
-          {/* Chronological List of Actual Customer Activity */}
+          {/* Fresh Chronological Events (Distinct from AI Evidence) */}
           <div className="space-y-2 text-xs">
-            {recentInteractionsPreview.map((item, idx) => (
-              <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
-                <div className="flex items-center space-x-2.5 truncate pr-2">
-                  <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
-                  <div className="truncate">
-                    <div className="font-bold text-slate-800 truncate">{item.title}</div>
-                    <div className="text-[10px] text-slate-500 font-medium">{item.channel} · {item.time} {item.detail ? `· ${item.detail}` : ''}</div>
-                  </div>
-                </div>
-                <span className={`px-2 py-0.5 text-[10px] font-bold rounded border shrink-0 ${item.badgeColor}`}>
-                  {item.channel}
-                </span>
+            <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+              <div className="flex items-center space-x-2.5 truncate pr-2">
+                <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
+                <div className="truncate font-semibold text-slate-800">Viewed myPricing ROI calculator</div>
               </div>
-            ))}
+              <div className="flex items-center space-x-2 shrink-0">
+                <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded">Website</span>
+                <span className="text-[11px] text-slate-400 font-mono">Today · 10:42 AM</span>
+              </div>
+            </div>
+
+            <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+              <div className="flex items-center space-x-2.5 truncate pr-2">
+                <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
+                <div className="truncate font-semibold text-slate-800">Clicked "Explore myPricing" in email</div>
+              </div>
+              <div className="flex items-center space-x-2 shrink-0">
+                <span className="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded">Email</span>
+                <span className="text-[11px] text-slate-400 font-mono">Today · 9:15 AM</span>
+              </div>
+            </div>
+
+            <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+              <div className="flex items-center space-x-2.5 truncate pr-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+                <div className="truncate font-semibold text-slate-800">Asked ADA about Amazon API repricing</div>
+              </div>
+              <div className="flex items-center space-x-2 shrink-0">
+                <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded">Conversation</span>
+                <span className="text-[11px] text-slate-400 font-mono">Yesterday</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-[11px] text-slate-400 pt-1 text-right">
+            Shows 3 latest events • Detailed history in Interactions
           </div>
         </div>
 
-        {/* B2B Marketing Lifecycle Stage (5 Cols) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-xl p-4 space-y-2.5 shadow-2xs flex flex-col justify-between text-xs">
+        {/* Compact B2B Marketing Lifecycle Stage (5 Cols) */}
+        <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-xl p-4 space-y-3 shadow-2xs flex flex-col justify-between text-xs">
           
           {/* Card Header */}
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -242,7 +264,7 @@ export default function PrimaryDecisionBlock({
           </div>
 
           {/* Compact Stepper */}
-          <div className="flex items-center justify-between text-[9px] font-bold py-1 px-2 bg-slate-50 rounded-xl border border-slate-200/80">
+          <div className="flex items-center justify-between text-[9px] font-bold py-1.5 px-2 bg-slate-50 rounded-xl border border-slate-200/80">
             {["Awareness", "Evaluation", "Product Interest", "Expansion", "Advocacy"].map((st, idx) => {
               const isCurrent = st === "Product Interest";
               const isPast = st === "Awareness" || st === "Evaluation";
@@ -263,41 +285,23 @@ export default function PrimaryDecisionBlock({
             })}
           </div>
 
-          {/* Stage Metadata */}
-          <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+          {/* Compact Stage Metadata Grid */}
+          <div className="grid grid-cols-2 gap-2 text-center bg-slate-50 border border-slate-200/80 rounded-xl p-2.5">
             <div>
-              <span className="text-slate-400 font-bold uppercase text-[9px]">Entered:</span>
-              <span className="font-semibold text-slate-800 ml-1">5 days ago</span>
+              <div className="text-[10px] font-bold text-slate-400 uppercase">Stage Entered</div>
+              <div className="text-xs font-extrabold text-slate-800">5 days ago</div>
             </div>
             <div>
-              <span className="text-slate-400 font-bold uppercase text-[9px]">Confidence:</span>
-              <span className="font-extrabold text-emerald-700 ml-1">High (91%)</span>
-            </div>
-          </div>
-
-          {/* Why in this stage */}
-          <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200/80 space-y-1">
-            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Why in this stage:</div>
-            <p className="text-[11px] text-slate-700 font-medium leading-snug">
-              "Actively researching myPricing capabilities and comparing dynamic repricing features."
-            </p>
-          </div>
-
-          {/* Key Stage Signals */}
-          <div className="space-y-1">
-            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Key Stage Signals:</div>
-            <div className="flex items-center flex-wrap gap-1.5 text-[10px] font-semibold text-slate-700">
-              <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md">4 page visits</span>
-              <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md">Playbook downloaded</span>
-              <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md">42m webinar</span>
+              <div className="text-[10px] font-bold text-slate-400 uppercase">Confidence</div>
+              <div className="text-xs font-extrabold text-emerald-700">91% (High)</div>
             </div>
           </div>
 
           {/* Next Likely Stage */}
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
             <span className="text-slate-500 font-medium">Next likely stage:</span>
-            <span className="font-extrabold text-indigo-700 flex items-center space-x-1">
-              <span>➔ Expansion (myPricing Cross-Sell)</span>
+            <span className="font-extrabold text-indigo-700">
+              ➔ Expansion (myPricing Cross-Sell)
             </span>
           </div>
 
