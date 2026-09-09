@@ -228,36 +228,79 @@ export default function PrimaryDecisionBlock({
         </div>
 
         {/* B2B Marketing Lifecycle Stage (5 Cols) */}
-        <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-xl p-4 space-y-2.5 shadow-2xs flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-xl p-4 space-y-2.5 shadow-2xs flex flex-col justify-between text-xs">
+          
+          {/* Card Header */}
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-              <GitCommit className="w-4 h-4 text-slate-500" />
-              <span>Account Lifecycle Stage</span>
+              <GitCommit className="w-4 h-4 text-indigo-600" />
+              <span>Account Lifecycle</span>
             </h3>
-            <span className="px-2 py-0.5 text-[10px] font-bold bg-amber-100 text-amber-800 rounded">
-              {journey.currentStage}
+            <span className="px-2 py-0.5 text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300 rounded-md">
+              Product Interest
             </span>
           </div>
 
-          {/* Stepper */}
-          <div className="flex items-center justify-between text-[10px] font-bold py-1">
-            {journey.stages.map((st, idx) => (
-              <div key={st} className="flex items-center space-x-1">
-                <span className={`px-2 py-0.5 rounded-md ${
-                  st === journey.currentStage 
-                    ? 'bg-amber-500 text-white font-extrabold' 
-                    : 'text-slate-500 bg-slate-100'
-                }`}>
-                  {st}
-                </span>
-                {idx < journey.stages.length - 1 && <span className="text-slate-300">➔</span>}
-              </div>
-            ))}
+          {/* Compact Stepper */}
+          <div className="flex items-center justify-between text-[9px] font-bold py-1 px-2 bg-slate-50 rounded-xl border border-slate-200/80">
+            {["Awareness", "Evaluation", "Product Interest", "Expansion", "Advocacy"].map((st, idx) => {
+              const isCurrent = st === "Product Interest";
+              const isPast = st === "Awareness" || st === "Evaluation";
+              return (
+                <React.Fragment key={st}>
+                  <span className={`px-1.5 py-0.5 rounded ${
+                    isCurrent 
+                      ? 'bg-amber-500 text-white font-extrabold shadow-2xs' 
+                      : isPast
+                      ? 'text-slate-700 bg-slate-200 font-semibold'
+                      : 'text-slate-400 font-normal'
+                  }`}>
+                    {st === "Product Interest" ? "● Product Interest" : st}
+                  </span>
+                  {idx < 4 && <span className="text-slate-300">➔</span>}
+                </React.Fragment>
+              );
+            })}
           </div>
 
-          <p className="text-[11px] text-slate-600 bg-slate-50 p-2 rounded-lg border border-slate-200">
-            <span className="font-semibold text-slate-700">Reason:</span> "{journey.reason}"
-          </p>
+          {/* Stage Metadata */}
+          <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+            <div>
+              <span className="text-slate-400 font-bold uppercase text-[9px]">Entered:</span>
+              <span className="font-semibold text-slate-800 ml-1">5 days ago</span>
+            </div>
+            <div>
+              <span className="text-slate-400 font-bold uppercase text-[9px]">Confidence:</span>
+              <span className="font-extrabold text-emerald-700 ml-1">High (91%)</span>
+            </div>
+          </div>
+
+          {/* Why in this stage */}
+          <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-200/80 space-y-1">
+            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Why in this stage:</div>
+            <p className="text-[11px] text-slate-700 font-medium leading-snug">
+              "Actively researching myPricing capabilities and comparing dynamic repricing features."
+            </p>
+          </div>
+
+          {/* Key Stage Signals */}
+          <div className="space-y-1">
+            <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Key Stage Signals:</div>
+            <div className="flex items-center flex-wrap gap-1.5 text-[10px] font-semibold text-slate-700">
+              <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md">4 page visits</span>
+              <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md">Playbook downloaded</span>
+              <span className="px-2 py-0.5 bg-white border border-slate-200 rounded-md">42m webinar</span>
+            </div>
+          </div>
+
+          {/* Next Likely Stage */}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <span className="text-slate-500 font-medium">Next likely stage:</span>
+            <span className="font-extrabold text-indigo-700 flex items-center space-x-1">
+              <span>➔ Expansion (myPricing Cross-Sell)</span>
+            </span>
+          </div>
+
         </div>
 
       </div>
