@@ -21,16 +21,16 @@ export default function PrimaryDecisionBlock({
   onExecutePrimaryAction, 
   onWhyThisClick, 
   isExecuted, 
-  onScrollToTimeline 
+  onViewFullTimeline 
 }) {
   const { primaryInsight, primaryAction, journey } = customer;
 
   // Sample recent chronological interactions for overview preview
   const recentInteractionsPreview = [
-    { title: "Viewed myPricing product page (4th visit)", channel: "Website", badgeColor: "bg-blue-100 text-blue-800 border-blue-200", time: "Today · 10:42 AM" },
-    { title: "Opened & clicked Pricing Strategy campaign email", channel: "Email", badgeColor: "bg-indigo-100 text-indigo-800 border-indigo-200", time: "Today · 9:15 AM" },
-    { title: "Downloaded 'Dynamic Pricing Playbook' (PDF)", channel: "Website", badgeColor: "bg-purple-100 text-purple-800 border-purple-200", time: "3 days ago" },
-    { title: "Attended 'Competitive Pricing Strategy' webinar (42 mins)", channel: "Webinar", badgeColor: "bg-amber-100 text-amber-800 border-amber-200", time: "5 days ago" }
+    { title: "Viewed myPricing product page", channel: "Website", detail: "4th visit this week", badgeColor: "bg-blue-100 text-blue-800 border-blue-200", time: "Today, 10:42 AM" },
+    { title: "Opened & clicked Pricing Strategy campaign email", channel: "Email", detail: "Campaign #PRC-2026", badgeColor: "bg-indigo-100 text-indigo-800 border-indigo-200", time: "Today, 9:15 AM" },
+    { title: "Downloaded Dynamic Pricing Playbook", channel: "Website", detail: "24-page PDF resource", badgeColor: "bg-purple-100 text-purple-800 border-purple-200", time: "3 days ago" },
+    { title: "Attended Competitive Pricing Strategy webinar", channel: "Webinar", detail: "42 min attendance", badgeColor: "bg-amber-100 text-amber-800 border-amber-200", time: "5 days ago" }
   ];
 
   return (
@@ -201,11 +201,10 @@ export default function PrimaryDecisionBlock({
               <span>Recent Interactions</span>
             </h3>
             <button 
-              onClick={onScrollToTimeline}
+              onClick={onViewFullTimeline}
               className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer"
             >
-              <span>View full timeline</span>
-              <ArrowRight className="w-3 h-3" />
+              <span>View full timeline →</span>
             </button>
           </div>
 
@@ -213,16 +212,16 @@ export default function PrimaryDecisionBlock({
           <div className="space-y-2 text-xs">
             {recentInteractionsPreview.map((item, idx) => (
               <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
-                <div className="flex items-center space-x-2 truncate pr-2">
-                  <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
-                  <span className="font-semibold text-slate-800 truncate">{item.title}</span>
+                <div className="flex items-center space-x-2.5 truncate pr-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
+                  <div className="truncate">
+                    <div className="font-bold text-slate-800 truncate">{item.title}</div>
+                    <div className="text-[10px] text-slate-500 font-medium">{item.channel} · {item.time} {item.detail ? `· ${item.detail}` : ''}</div>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2 shrink-0">
-                  <span className={`px-2 py-0.2 text-[10px] font-bold rounded border ${item.badgeColor}`}>
-                    {item.channel}
-                  </span>
-                  <span className="text-[11px] text-slate-400 font-mono">{item.time}</span>
-                </div>
+                <span className={`px-2 py-0.5 text-[10px] font-bold rounded border shrink-0 ${item.badgeColor}`}>
+                  {item.channel}
+                </span>
               </div>
             ))}
           </div>

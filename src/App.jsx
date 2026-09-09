@@ -268,43 +268,33 @@ export default function App() {
                 </button>
               </div>
             ) : activeTab === "Overview" ? (
-              <>
-                {/* 4. PRIMARY HERO DECISION BLOCK (BEHAVIOUR ➔ INSIGHT ➔ EVIDENCE ➔ RECOMMENDATION ➔ ACTION) */}
-                <PrimaryDecisionBlock 
-                  customer={customer}
-                  onExecutePrimaryAction={(act) => setSelectedActionForModal(act)}
-                  onWhyThisClick={() => setIsWhyTheseOpen(true)}
-                  isExecuted={executedActionIds.includes(customer.primaryAction.id)}
-                  onScrollToTimeline={handleScrollToTimeline}
-                />
-
-                {/* 5. FULL TIMELINE & CONTEXTUAL SIDEBAR GRID */}
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start pt-2">
-                  
-                  {/* Full Historical Interaction Timeline (8 Cols) */}
-                  <div className="xl:col-span-8 space-y-6" ref={timelineRef}>
-                    <UnifiedTimeline 
-                      events={customer.timelineEvents}
-                      onViewEventDetails={(evt) => showToast(`Opening evidence detail: ${evt.title}`)}
-                      activeTraceInsightId={activeTraceInsightId}
-                      onClearTrace={() => setActiveTraceInsightId(null)}
-                      insights={[customer.primaryInsight, ...customer.secondaryInsights]}
-                      actions={[customer.primaryAction, ...customer.secondaryActions]}
-                    />
-                  </div>
-
-                  {/* Contextual Right Sidebar: Account Details, Campaigns, Current Products (4 Cols) */}
-                  <div className="xl:col-span-4">
-                    <RightSidebar 
-                      customer={customer}
-                      onSegmentClick={(seg) => showToast(`Filtering by segment: ${seg.name}`)}
-                      onOrderClick={(ord) => showToast(`Viewing subscription details for ${ord.name}`)}
-                      onEntityClick={(ent) => showToast(`Inspecting related graph entity: ${ent.name}`)}
-                    />
-                  </div>
-
+              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                
+                {/* PRIMARY DECISION BLOCK & RECENT INTERACTIONS SUMMARY (8 Cols) */}
+                <div className="xl:col-span-8 space-y-6">
+                  <PrimaryDecisionBlock 
+                    customer={customer}
+                    onExecutePrimaryAction={(act) => setSelectedActionForModal(act)}
+                    onWhyThisClick={() => setIsWhyTheseOpen(true)}
+                    isExecuted={executedActionIds.includes(customer.primaryAction.id)}
+                    onViewFullTimeline={() => {
+                      setActiveTab("Interactions");
+                      setActiveSubTab("Interactions");
+                    }}
+                  />
                 </div>
-              </>
+
+                {/* CONTEXTUAL SIDEBAR: SEGMENTS, CAMPAIGNS, SUBSCRIPTIONS (4 Cols) */}
+                <div className="xl:col-span-4">
+                  <RightSidebar 
+                    customer={customer}
+                    onSegmentClick={(seg) => showToast(`Filtering by segment: ${seg.name}`)}
+                    onOrderClick={(ord) => showToast(`Viewing subscription details for ${ord.name}`)}
+                    onEntityClick={(ent) => showToast(`Inspecting related graph entity: ${ent.name}`)}
+                  />
+                </div>
+
+              </div>
             ) : activeTab === "Interactions" ? (
               <InteractionsTab 
                 customer={customer}
