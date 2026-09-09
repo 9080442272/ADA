@@ -190,119 +190,126 @@ export default function PrimaryDecisionBlock({
 
       </div>
 
-      {/* 2. PROMINENT FULL-WIDTH B2B ACCOUNT LIFECYCLE CARD (DIRECTLY BELOW AI DECISION ENGINE) */}
-      <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs space-y-4">
+      {/* 2. SIDE-BY-SIDE COLUMNS: ACCOUNT LIFECYCLE & LATEST ACTIVITY (6 COLS EACH FOR CONSISTENCY) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        {/* Card Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="text-sm font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
-            <GitCommit className="w-4 h-4 text-indigo-600" />
-            <span>ACCOUNT LIFECYCLE</span>
-          </h3>
-          <span className="px-3 py-1 text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300 rounded-lg shadow-2xs">
-            Product Interest
-          </span>
-        </div>
-
-        {/* Big Stepper */}
-        <div className="flex items-center justify-between text-xs font-bold py-3 px-4 bg-slate-50/80 rounded-xl border border-slate-200/80 overflow-x-auto">
-          {["Awareness", "Evaluation", "Product Interest", "Expansion", "Advocacy"].map((st, idx) => {
-            const isCurrent = st === "Product Interest";
-            const isPast = st === "Awareness" || st === "Evaluation";
-            return (
-              <React.Fragment key={st}>
-                <span className={`px-3 py-1.5 rounded-lg transition-all ${
-                  isCurrent 
-                    ? 'bg-amber-500 text-white font-extrabold shadow-sm text-xs flex items-center space-x-1.5' 
-                    : isPast
-                    ? 'text-slate-700 bg-slate-200/80 font-semibold'
-                    : 'text-slate-400 font-normal'
-                }`}>
-                  {isCurrent && <span className="w-2 h-2 rounded-full bg-white animate-pulse" />}
-                  <span>{st}</span>
-                </span>
-                {idx < 4 && <span className="text-slate-300 font-bold text-sm">➔</span>}
-              </React.Fragment>
-            );
-          })}
-        </div>
-
-        {/* Big Stage Metadata Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center bg-slate-50/80 border border-slate-200/80 rounded-xl p-4">
+        {/* Account Lifecycle Card (6 Cols) */}
+        <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs space-y-4 flex flex-col justify-between">
           <div>
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">STAGE ENTERED</div>
-            <div className="text-lg font-extrabold text-slate-900 mt-1 font-sans">5 days ago</div>
+            {/* Card Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
+                <GitCommit className="w-4 h-4 text-indigo-600" />
+                <span>ACCOUNT LIFECYCLE</span>
+              </h3>
+              <span className="px-2.5 py-0.5 text-[11px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300 rounded-md shadow-2xs">
+                Product Interest
+              </span>
+            </div>
+
+            {/* Stepper */}
+            <div className="flex items-center justify-between text-[10px] font-bold py-2.5 px-3 bg-slate-50 rounded-xl border border-slate-200/80 overflow-x-auto my-3">
+              {["Awareness", "Evaluation", "Product Interest", "Expansion", "Advocacy"].map((st, idx) => {
+                const isCurrent = st === "Product Interest";
+                const isPast = st === "Awareness" || st === "Evaluation";
+                return (
+                  <React.Fragment key={st}>
+                    <span className={`px-1.5 py-0.5 rounded ${
+                      isCurrent 
+                        ? 'bg-amber-500 text-white font-extrabold shadow-2xs text-[10px] flex items-center space-x-1' 
+                        : isPast
+                        ? 'text-slate-700 bg-slate-200/80 font-semibold'
+                        : 'text-slate-400 font-normal'
+                    }`}>
+                      {isCurrent && <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
+                      <span>{st === "Product Interest" ? "Product Interest" : st}</span>
+                    </span>
+                    {idx < 4 && <span className="text-slate-300">➔</span>}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+
+            {/* Stage Metadata Grid */}
+            <div className="grid grid-cols-2 gap-2 text-center bg-slate-50 border border-slate-200/80 rounded-xl p-3">
+              <div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">STAGE ENTERED</div>
+                <div className="text-xs font-extrabold text-slate-900 mt-0.5">5 days ago</div>
+              </div>
+              <div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">CONFIDENCE</div>
+                <div className="text-xs font-extrabold text-emerald-700 mt-0.5">91% (High)</div>
+              </div>
+            </div>
           </div>
+
+          {/* Next Likely Stage Row */}
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="text-slate-500 font-semibold text-[11px]">Next likely stage:</span>
+            <span className="font-extrabold text-indigo-700 text-xs">
+              ➔ Expansion (myPricing Cross-Sell)
+            </span>
+          </div>
+        </div>
+
+        {/* Latest Activity Card (6 Cols) */}
+        <div className="lg:col-span-6 bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs space-y-4 flex flex-col justify-between">
           <div>
-            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">CONFIDENCE</div>
-            <div className="text-lg font-extrabold text-emerald-600 mt-1 font-sans">91% (High)</div>
-          </div>
-        </div>
-
-        {/* Next Likely Stage Row */}
-        <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
-          <span className="text-slate-500 font-semibold">Next likely stage:</span>
-          <span className="font-extrabold text-indigo-600 text-sm">
-            ➔ Expansion (myPricing Cross-Sell)
-          </span>
-        </div>
-
-      </div>
-
-      {/* 3. LATEST ACTIVITY CARD (FRESH NON-DUPLICATED EVENTS) */}
-      <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-            <Clock className="w-4 h-4 text-indigo-600" />
-            <span>Latest Activity</span>
-          </h3>
-          <button 
-            onClick={onViewFullTimeline}
-            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer"
-          >
-            <span>View timeline →</span>
-          </button>
-        </div>
-
-        {/* Fresh Chronological Events (Distinct from AI Evidence) */}
-        <div className="space-y-2.5 text-xs">
-          <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between">
-            <div className="flex items-center space-x-2.5 truncate pr-2">
-              <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
-              <div className="truncate font-semibold text-slate-800">Viewed myPricing ROI calculator</div>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
+                <Clock className="w-4 h-4 text-indigo-600" />
+                <span>LATEST ACTIVITY</span>
+              </h3>
+              <button 
+                onClick={onViewFullTimeline}
+                className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer"
+              >
+                <span>View timeline →</span>
+              </button>
             </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded">Website</span>
-              <span className="text-[11px] text-slate-400 font-mono">Today · 10:42 AM</span>
-            </div>
-          </div>
 
-          <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between">
-            <div className="flex items-center space-x-2.5 truncate pr-2">
-              <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
-              <div className="truncate font-semibold text-slate-800">Clicked "Explore myPricing" in email</div>
-            </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded">Email</span>
-              <span className="text-[11px] text-slate-400 font-mono">Today · 9:15 AM</span>
+            {/* Fresh Chronological Events */}
+            <div className="space-y-2 text-xs pt-3">
+              <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+                <div className="flex items-center space-x-2 truncate pr-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
+                  <div className="truncate font-semibold text-slate-800">Viewed myPricing ROI calculator</div>
+                </div>
+                <div className="flex items-center space-x-1.5 shrink-0">
+                  <span className="px-1.5 py-0.5 text-[9px] font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded">Website</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Today · 10:42 AM</span>
+                </div>
+              </div>
+
+              <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+                <div className="flex items-center space-x-2 truncate pr-2">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600 shrink-0" />
+                  <div className="truncate font-semibold text-slate-800">Clicked "Explore myPricing" in email</div>
+                </div>
+                <div className="flex items-center space-x-1.5 shrink-0">
+                  <span className="px-1.5 py-0.5 text-[9px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded">Email</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Today · 9:15 AM</span>
+                </div>
+              </div>
+
+              <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+                <div className="flex items-center space-x-2 truncate pr-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+                  <div className="truncate font-semibold text-slate-800">Asked ADA about Amazon API repricing</div>
+                </div>
+                <div className="flex items-center space-x-1.5 shrink-0">
+                  <span className="px-1.5 py-0.5 text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded">Conversation</span>
+                  <span className="text-[10px] text-slate-400 font-mono">Yesterday</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl flex items-center justify-between">
-            <div className="flex items-center space-x-2.5 truncate pr-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
-              <div className="truncate font-semibold text-slate-800">Asked ADA about Amazon API repricing</div>
-            </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded">Conversation</span>
-              <span className="text-[11px] text-slate-400 font-mono">Yesterday</span>
-            </div>
+          <div className="text-[10px] text-slate-400 pt-2 text-right border-t border-slate-100">
+            Shows 3 latest events • Detailed history in Interactions
           </div>
         </div>
 
-        <div className="text-[11px] text-slate-400 pt-1 text-right">
-          Shows 3 latest events • Detailed history in Interactions
-        </div>
       </div>
 
     </div>
