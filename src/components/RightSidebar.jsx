@@ -23,69 +23,6 @@ export default function RightSidebar({ customer, onSegmentClick, onOrderClick, o
 
   return (
     <aside className="w-full space-y-5">
-      
-      {/* Block 1: B2B Account Details */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 space-y-3">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-          <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
-            <Building2 className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Account Details</span>
-          </h3>
-          <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-            Verified B2B Account
-          </span>
-        </div>
-
-        <div className="space-y-2 text-xs divide-y divide-slate-100">
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Company</span>
-            <span className="font-bold text-slate-800">{customer.name}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Industry</span>
-            <span className="font-semibold text-slate-800">{customer.industry}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Company Size</span>
-            <span className="font-semibold text-slate-800">{customer.companySize}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Country</span>
-            <span className="font-semibold text-slate-800">{sidebarDetails.country || "Paris, France"}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Primary Contact</span>
-            <span className="font-semibold text-indigo-700 truncate max-w-[160px]">{customer.primaryContact}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Account ID</span>
-            <span className="font-mono font-bold text-slate-800">{customer.id}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Customer Since</span>
-            <span className="font-semibold text-slate-800">{customer.customerSince}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Current Products</span>
-            <span className="font-bold text-emerald-600">{sidebarDetails.currentProducts || "myFulfillment"}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Account Owner</span>
-            <span className="font-semibold text-slate-800">{sidebarDetails.accountOwner || "Claire Dubois"}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Lead Source</span>
-            <span className="font-semibold text-indigo-600">{sidebarDetails.leadSource || "Inbound Content"}</span>
-          </div>
-          <div className="flex justify-between py-1">
-            <span className="text-slate-500 font-medium">Marketing Consent</span>
-            <span className="font-medium text-slate-800 flex items-center space-x-1">
-              <ShieldCheck className="w-3 h-3 text-emerald-500" />
-              <span>{sidebarDetails.marketingConsent || "Verified GDPR"}</span>
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* Block 2: Active Marketing Segments */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 space-y-3">

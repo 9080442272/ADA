@@ -26,6 +26,8 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
     setTimeout(() => setCopiedId(false), 2000);
   };
 
+  const sidebarDetails = customer.sidebarDetails || {};
+
   return (
     <div className="space-y-3 mb-2">
       
@@ -108,13 +110,13 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
 
       </div>
 
-      {/* 2. REFINED B2B ACCOUNT HEADER CONTAINER */}
+      {/* 2. MERGED & REFINED B2B ACCOUNT HEADER CONTAINER */}
       <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs space-y-4">
         
-        {/* Main Header Grid */}
+        {/* TOP ROW: Identity + Complete Metadata */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* COL 1: Account Identity & Quiet Tags (5 Cols) */}
+          {/* COL 1: Account Logo & Identity (5 Cols) */}
           <div className="lg:col-span-5 flex items-start space-x-4">
             
             {/* Account Logo */}
@@ -127,8 +129,8 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
               <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full" title="Active Customer" />
             </div>
 
-            {/* Name, Primary Status, Secondary Contact, Quiet Tags */}
-            <div className="space-y-1 min-w-0 flex-1">
+            {/* Name, Status Badges, ID, Tags */}
+            <div className="space-y-1.5 min-w-0 flex-1">
               
               {/* Primary: Account Name & Status Badges */}
               <div className="flex items-center flex-wrap gap-2">
@@ -147,27 +149,18 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
                 </span>
               </div>
 
-              {/* Secondary: ID + Primary Contact */}
-              <div className="flex items-center space-x-3 text-xs text-slate-500 pt-0.5">
-                <div className="flex items-center space-x-1 font-mono">
-                  <span className="text-slate-400">ID:</span>
-                  <span className="font-semibold text-slate-700">{customer.id}</span>
-                  <button onClick={handleCopyId} title="Copy Account ID" className="text-slate-400 hover:text-slate-700 cursor-pointer ml-0.5">
-                    <Copy className="w-3 h-3" />
-                  </button>
-                  {copiedId && <span className="text-[10px] text-emerald-600 font-bold ml-1">Copied!</span>}
-                </div>
-
-                <span>•</span>
-
-                <div className="flex items-center space-x-1 truncate text-slate-700 font-medium">
-                  <Mail className="w-3 h-3 text-slate-400 shrink-0" />
-                  <span>{customer.primaryContact}</span>
-                </div>
+              {/* Account ID + Copy Action */}
+              <div className="flex items-center space-x-2 text-xs text-slate-500 font-mono">
+                <span className="text-slate-400 font-sans">Account ID:</span>
+                <span className="font-bold text-slate-800">{customer.id}</span>
+                <button onClick={handleCopyId} title="Copy Account ID" className="text-slate-400 hover:text-slate-700 cursor-pointer ml-0.5">
+                  <Copy className="w-3 h-3" />
+                </button>
+                {copiedId && <span className="text-[10px] text-emerald-600 font-bold ml-1 font-sans">Copied!</span>}
               </div>
 
-              {/* Account Tags Row (Visually Quieter) */}
-              <div className="flex items-center flex-wrap gap-1.5 pt-1.5">
+              {/* Account Tags Row (Quiet Pills) */}
+              <div className="flex items-center flex-wrap gap-1.5 pt-1">
                 {customer.tags.map((tag, idx) => (
                   <span 
                     key={idx}
@@ -182,66 +175,94 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
 
           </div>
 
-          {/* COL 2: B2B Metadata (2 Cols) */}
-          <div className="lg:col-span-2 space-y-1 text-xs text-slate-600 border-l border-slate-100 pl-4">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Account Profile</div>
-            <div className="flex items-center space-x-1.5 font-medium text-slate-800">
-              <Building className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{customer.industry}</span>
-            </div>
-            <div className="flex items-center space-x-1.5 text-slate-600">
-              <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{customer.companySize}</span>
-            </div>
-            <div className="flex items-center space-x-1.5 text-slate-600">
-              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{customer.location}</span>
-            </div>
-            <div className="flex items-center space-x-1.5 text-slate-500 font-mono text-[11px]">
-              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>Customer since {customer.customerSince}</span>
-            </div>
-          </div>
-
-          {/* COL 3: Business Metrics (Strongest Emphasis on LTV, Expansion, Engagement) (5 Cols) */}
-          <div className="lg:col-span-5 border-l border-slate-100 pl-4 space-y-2">
-            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Business & Opportunity Metrics</div>
+          {/* COL 2: Unified B2B Profile Metadata (7 Cols) */}
+          <div className="lg:col-span-7 bg-slate-50/80 border border-slate-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-2">
+            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Account Metadata</div>
             
-            <div className="grid grid-cols-4 gap-2">
-              
-              {/* Metric 1: LTV (Strongest Emphasis) */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Lifetime Value</div>
-                <div className="text-base font-extrabold text-slate-900 font-mono">{customer.metrics.ltv}</div>
-                <div className="text-[10px] text-slate-400">ARR Tier 1</div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="flex items-center space-x-1.5 font-medium text-slate-800">
+                <Building className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="truncate">{customer.industry}</span>
               </div>
 
-              {/* Metric 2: Expansion Potential (Strongest Emphasis) */}
-              <div className="bg-amber-50/60 border border-amber-200 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">Expansion</div>
-                <div className="text-sm font-extrabold text-amber-900">High Opportunity</div>
-                <div className="text-[10px] text-amber-700 font-medium">myPricing Intent</div>
+              <div className="flex items-center space-x-1.5 text-slate-600">
+                <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span>{customer.location}</span>
               </div>
 
-              {/* Metric 3: Marketing Engagement (Strongest Emphasis) */}
-              <div className="bg-indigo-50/60 border border-indigo-200 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[10px] font-bold text-indigo-800 uppercase tracking-wider">Engagement</div>
-                <div className="text-base font-extrabold text-indigo-900">{customer.metrics.marketingEngagement}</div>
-                <div className="text-[10px] text-indigo-700 font-medium">Open & Click Rate</div>
+              <div className="flex items-center space-x-1.5 text-slate-600">
+                <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span>{customer.companySize}</span>
               </div>
 
-              {/* Metric 4: Active Product */}
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 space-y-0.5">
-                <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Active Product</div>
-                <div className="text-xs font-bold text-emerald-800">myFulfillment</div>
-                <div className="text-[10px] text-slate-400">Pro Plan</div>
+              <div className="flex items-center space-x-1.5 text-slate-600">
+                <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span>Customer since {customer.customerSince}</span>
               </div>
 
+              <div className="flex items-center space-x-1.5 font-medium text-indigo-950 truncate">
+                <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="truncate" title={customer.primaryContact}>{customer.primaryContact}</span>
+              </div>
+
+              <div className="flex items-center space-x-1.5 text-slate-600 truncate">
+                <span className="text-slate-400 font-bold text-[10px] uppercase">Owner:</span>
+                <span className="font-semibold text-slate-800 truncate">{sidebarDetails.accountOwner || "Claire Dubois"}</span>
+              </div>
+            </div>
+
+            <div className="pt-1.5 border-t border-slate-200/60 flex items-center justify-between text-[11px] text-slate-500">
+              <div className="flex items-center space-x-1">
+                <span className="text-slate-400 font-bold text-[10px] uppercase">Lead Source:</span>
+                <span className="font-semibold text-indigo-700">{sidebarDetails.leadSource || "Inbound Content Marketing"}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <span className="text-slate-400 font-bold text-[10px] uppercase">Consent:</span>
+                <span className="font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                  {sidebarDetails.marketingConsent || "GDPR Compliant"}
+                </span>
+              </div>
             </div>
 
           </div>
 
         </div>
+
+        {/* BOTTOM ROW: Key Business Metrics (LTV, Expansion, Engagement, Active Product) */}
+        <div className="pt-3 border-t border-slate-100">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            
+            {/* Metric 1: Lifetime Value (Strongest Emphasis) */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-0.5">
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Lifetime Value</div>
+              <div className="text-lg font-extrabold text-slate-900 font-mono">{customer.metrics.ltv}</div>
+              <div className="text-[10px] text-slate-400">ARR Tier 1 Enterprise</div>
+            </div>
+
+            {/* Metric 2: Expansion Potential (Strongest Emphasis) */}
+            <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 space-y-0.5">
+              <div className="text-[10px] font-bold text-amber-800 uppercase tracking-wider">Expansion Opportunity</div>
+              <div className="text-sm font-extrabold text-amber-900">HIGH OPPORTUNITY</div>
+              <div className="text-[10px] text-amber-700 font-medium">myPricing Cross-Sell Intent</div>
+            </div>
+
+            {/* Metric 3: Marketing Engagement (Strongest Emphasis) */}
+            <div className="bg-indigo-50/70 border border-indigo-200 rounded-xl p-3 space-y-0.5">
+              <div className="text-[10px] font-bold text-indigo-800 uppercase tracking-wider">Engagement Rate</div>
+              <div className="text-lg font-extrabold text-indigo-900">{customer.metrics.marketingEngagement}</div>
+              <div className="text-[10px] text-indigo-700 font-medium">Open & Click Through Rate</div>
+            </div>
+
+            {/* Metric 4: Active Product */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-0.5">
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Active Product</div>
+              <div className="text-sm font-extrabold text-emerald-800">myFulfillment</div>
+              <div className="text-[10px] text-slate-400">Pro Operations Plan</div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
 
     </div>
