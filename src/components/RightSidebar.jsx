@@ -84,33 +84,60 @@ export default function RightSidebar({ customer, onSegmentClick, onOrderClick, o
         </div>
       </div>
 
-      {/* Block 4: Commercial Activity & Subscriptions */}
+      {/* Block 4: Active Subscription Summary */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-4 space-y-3">
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center space-x-1.5">
             <CreditCard className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Active Subscriptions</span>
+            <span>Active Subscription</span>
           </h3>
-          <button className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800">View Invoices</button>
+          <button 
+            onClick={() => onOrderClick && onOrderClick({ items: "myFulfillment Pro Plan", amount: "€1,850/mo", status: "Active" })}
+            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-0.5 cursor-pointer"
+          >
+            <span>View subscription →</span>
+          </button>
         </div>
 
-        <div className="space-y-2">
-          {recentOrders.map((ord) => (
-            <div 
-              key={ord.id}
-              onClick={() => onOrderClick && onOrderClick(ord)}
-              className="p-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200/80 transition-colors cursor-pointer text-xs space-y-1"
-            >
-              <div className="flex items-center justify-between font-bold text-slate-900">
-                <span>{ord.items}</span>
-                <span className="text-indigo-700 font-mono font-extrabold">{ord.amount}</span>
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-slate-500">
-                <span>ID: {ord.id}</span>
-                <span className="text-emerald-600 font-bold">{ord.status}</span>
-              </div>
+        <div className="space-y-3">
+          {/* Product Name & Status */}
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs font-extrabold text-slate-900">myFulfillment Pro Plan</div>
+              <div className="text-[11px] text-slate-500 font-medium">Fulfillment & Operations</div>
             </div>
-          ))}
+            <span className="px-2 py-0.5 text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-md flex items-center space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Active</span>
+            </span>
+          </div>
+
+          {/* 3 Metrics Strip */}
+          <div className="grid grid-cols-3 gap-2 text-center bg-slate-50 border border-slate-200/80 rounded-xl p-2.5">
+            <div>
+              <div className="text-xs font-extrabold text-slate-900 font-mono">€1,850 / mo</div>
+              <div className="text-[10px] text-slate-400 font-medium">Current plan</div>
+            </div>
+            <div>
+              <div className="text-xs font-extrabold text-slate-900 font-mono">1,420 orders/wk</div>
+              <div className="text-[10px] text-slate-400 font-medium">Current usage</div>
+            </div>
+            <div>
+              <div className="text-xs font-extrabold text-slate-900">Mar 2023</div>
+              <div className="text-[10px] text-slate-400 font-medium">Customer since</div>
+            </div>
+          </div>
+
+          {/* Feature Adoption Bar */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className="font-bold text-slate-700">Feature adoption</span>
+              <span className="font-extrabold text-emerald-700">82%</span>
+            </div>
+            <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden border border-slate-200/60">
+              <div className="h-full bg-emerald-500 rounded-full transition-all" style={{ width: '82%' }} />
+            </div>
+          </div>
         </div>
       </div>
 
