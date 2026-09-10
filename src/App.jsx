@@ -196,7 +196,19 @@ export default function App() {
               <div>
                 {activeSubTab === "Global_Attributes" && <GlobalAttributesView customer={customer} onShowToast={showToast} />}
                 {activeSubTab === "Segments" && <SegmentsView customer={customer} onShowToast={showToast} />}
-                {activeSubTab === "Events" && <EventsView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Events" && (
+                  <EventsView 
+                    customer={customer} 
+                    onShowToast={showToast} 
+                    onNavigateToAccountInteractions={() => {
+                      setActiveTab("Interactions");
+                      setActiveSubTab("Interactions");
+                    }}
+                    onNavigateToSegments={() => {
+                      setActiveSubTab("Segments");
+                    }}
+                  />
+                )}
                 {activeSubTab === "Tags & DNC" && <TagsDncView customer={customer} onShowToast={showToast} />}
                 {activeSubTab === "Duplicates" && <DuplicatesView customer={customer} onShowToast={showToast} />}
                 {activeSubTab === "Data Sources" && <DataSourcesView customer={customer} onShowToast={showToast} />}
