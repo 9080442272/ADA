@@ -244,32 +244,37 @@ export default function App() {
 
                 {/* 3. ACCOUNT 360 TAB CONTENT */}
                 {activeTab === "Overview" ? (
-                  <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-                    
-                    {/* PRIMARY DECISION BLOCK & RECENT INTERACTIONS SUMMARY (8 Cols) */}
-                    <div className="xl:col-span-8 space-y-6">
-                      <PrimaryDecisionBlock 
-                        customer={customer}
-                        onExecutePrimaryAction={(act) => setSelectedActionForModal(act)}
-                        onWhyThisClick={() => setIsWhyTheseOpen(true)}
-                        isExecuted={executedActionIds.includes(customer.primaryAction.id)}
-                        onViewFullTimeline={() => {
-                          setActiveTab("Interactions");
-                          setActiveSubTab("Interactions");
-                        }}
-                      />
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                      
+                      {/* PRIMARY DECISION BLOCK & RECENT INTERACTIONS SUMMARY (8 Cols) */}
+                      <div className="xl:col-span-8 space-y-6">
+                        <PrimaryDecisionBlock 
+                          customer={customer}
+                          onExecutePrimaryAction={(act) => setSelectedActionForModal(act)}
+                          onWhyThisClick={() => setIsWhyTheseOpen(true)}
+                          isExecuted={executedActionIds.includes(customer.primaryAction.id)}
+                          onViewFullTimeline={() => {
+                            setActiveTab("Interactions");
+                            setActiveSubTab("Interactions");
+                          }}
+                        />
+                      </div>
+
+                      {/* CONTEXTUAL SIDEBAR: SUBSCRIPTION & CAMPAIGN STATUS (4 Cols) */}
+                      <div className="xl:col-span-4">
+                        <RightSidebar 
+                          customer={customer}
+                          onSegmentClick={(seg) => showToast(`Filtering by segment: ${seg.name}`)}
+                          onOrderClick={(ord) => showToast(`Viewing subscription details for ${ord.name}`)}
+                          onEntityClick={(ent) => showToast(`Inspecting related graph entity: ${ent.name}`)}
+                        />
+                      </div>
+
                     </div>
 
-                    {/* CONTEXTUAL SIDEBAR: SEGMENTS, CAMPAIGNS, SUBSCRIPTIONS (4 Cols) */}
-                    <div className="xl:col-span-4">
-                      <RightSidebar 
-                        customer={customer}
-                        onSegmentClick={(seg) => showToast(`Filtering by segment: ${seg.name}`)}
-                        onOrderClick={(ord) => showToast(`Viewing subscription details for ${ord.name}`)}
-                        onEntityClick={(ent) => showToast(`Inspecting related graph entity: ${ent.name}`)}
-                      />
-                    </div>
-
+                    {/* VALUE PROPOSITION PARADIGM BANNER (OVERVIEW ONLY) */}
+                    <ValuePropBanner />
                   </div>
                 ) : activeTab === "Interactions" ? (
                   <InteractionsTab 
@@ -295,9 +300,6 @@ export default function App() {
 
               </div>
             )}
-
-            {/* BOTTOM VALUE PROPOSITION PARADIGM BANNER */}
-            <ValuePropBanner />
 
           </main>
 

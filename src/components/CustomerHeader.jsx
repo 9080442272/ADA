@@ -41,7 +41,7 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
               onClick={() => onBackToPeople && onBackToPeople()}
               className="hover:underline cursor-pointer text-slate-500"
             >
-              Customer 360
+              Account 360
             </span>
             <span>/</span>
             <span className="font-bold text-slate-900">{customer.name} Profile</span>
@@ -51,7 +51,7 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
             className="flex items-center space-x-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>← Back to People Directory</span>
+            <span>← Back to Accounts Directory</span>
           </button>
         </div>
 
