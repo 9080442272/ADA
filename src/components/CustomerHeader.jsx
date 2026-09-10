@@ -16,7 +16,7 @@ import {
   UserPlus
 } from 'lucide-react';
 
-export default function CustomerHeader({ customer, onStartConversation, onActionSelect }) {
+export default function CustomerHeader({ customer, onStartConversation, onActionSelect, onBackToPeople }) {
   const [actionsOpen, setActionsOpen] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
 
@@ -37,13 +37,21 @@ export default function CustomerHeader({ customer, onStartConversation, onAction
         {/* Left Breadcrumb & Back Link */}
         <div className="space-y-1">
           <div className="text-[11px] text-slate-500 font-medium flex items-center space-x-1">
-            <span className="hover:underline cursor-pointer text-slate-500">Accounts</span>
+            <span 
+              onClick={() => onBackToPeople && onBackToPeople()}
+              className="hover:underline cursor-pointer text-slate-500"
+            >
+              Customer 360
+            </span>
             <span>/</span>
-            <span className="font-bold text-slate-900">Account 360</span>
+            <span className="font-bold text-slate-900">{customer.name} Profile</span>
           </div>
-          <button className="flex items-center space-x-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors">
+          <button 
+            onClick={() => onBackToPeople && onBackToPeople()}
+            className="flex items-center space-x-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors cursor-pointer"
+          >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Accounts</span>
+            <span>← Back to People Directory</span>
           </button>
         </div>
 

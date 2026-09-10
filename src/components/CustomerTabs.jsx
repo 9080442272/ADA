@@ -3,34 +3,20 @@ import {
   LayoutDashboard, 
   MessageSquare, 
   CreditCard, 
-  Sliders,
-  Users,
-  Layers,
-  Activity,
-  Tag,
-  Copy,
-  Database,
-  ShieldCheck
+  Sliders
 } from 'lucide-react';
 
 export default function CustomerTabs({ activeTab, onSelectTab }) {
   const tabs = [
-    { id: "People", label: "People", icon: Users, badge: "125.4k" },
-    { id: "Overview", label: "Overview", icon: LayoutDashboard, badge: "TechGear" },
+    { id: "Overview", label: "Overview", icon: LayoutDashboard, badge: "360" },
     { id: "Interactions", label: "Interactions", icon: MessageSquare, badge: "18" },
     { id: "Commercial & Usage", label: "Commercial & Usage", icon: CreditCard, badge: "Active" },
-    { id: "Attributes", label: "Attributes", icon: Sliders, badge: "52" },
-    { id: "Segments", label: "Segments", icon: Layers, badge: "48" },
-    { id: "Events", label: "Events", icon: Activity, badge: "840k" },
-    { id: "Tags & DNC", label: "Tags & DNC", icon: Tag, badge: "28" },
-    { id: "Duplicates", label: "Duplicates", icon: Copy, badge: "2" },
-    { id: "Data Sources", label: "Data Sources", icon: Database, badge: "6" },
-    { id: "Compliance & GDPR", label: "Compliance & GDPR", icon: ShieldCheck, badge: "Verified" }
+    { id: "Attributes", label: "Attributes", icon: Sliders, badge: "52" }
   ];
 
   return (
     <div className="bg-white border-b border-slate-200 px-6 sticky top-16 z-20 shadow-2xs">
-      <div className="flex items-center space-x-1 overflow-x-auto scrollbar-none py-1">
+      <div className="flex items-center space-x-2 overflow-x-auto scrollbar-none py-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -38,7 +24,7 @@ export default function CustomerTabs({ activeTab, onSelectTab }) {
             <button
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
-              className={`flex items-center space-x-2 py-2.5 px-3.5 border-b-2 text-xs font-semibold whitespace-nowrap transition-all cursor-pointer rounded-t-lg ${
+              className={`flex items-center space-x-2 py-2.5 px-4 border-b-2 text-xs font-semibold whitespace-nowrap transition-all cursor-pointer rounded-t-lg ${
                 isActive
                   ? 'border-indigo-600 text-indigo-600 font-extrabold bg-slate-50/80 shadow-2xs'
                   : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50/50'

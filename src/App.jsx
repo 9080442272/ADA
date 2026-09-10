@@ -177,22 +177,23 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* UNIFIED CUSTOMER 360 TAB STRIP (EVERY CAPABILITY IN ONE TAB BAR) */}
-          <CustomerTabs 
-            activeTab={activeSubTab} 
-            onSelectTab={(tab) => {
-              setActiveTab(tab);
-              setActiveSubTab(tab);
-            }} 
-          />
-
-          {/* IF USER IS VIEWING SINGLE ACCOUNT 360 PROFILE (TechGear Europe) */}
+          {/* RENDER CUSTOMER PROFILE HEADER & TABS ONLY WHEN VIEWING SPECIFIC ACCOUNT DETAILS */}
           {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
-            <div className="px-6 pt-4 max-w-7xl mx-auto w-full">
+            <div className="px-6 pt-4 max-w-7xl mx-auto w-full space-y-3">
               <CustomerHeader 
                 customer={customer}
                 onStartConversation={() => setIsStartChatOpen(true)}
                 onActionSelect={handleHeaderActionSelect}
+                onBackToPeople={() => setActiveSubTab("People")}
+              />
+
+              {/* 4 TABS FOR SPECIFIC CUSTOMER DETAIL (Overview, Interactions, Commercial, Attributes) */}
+              <CustomerTabs 
+                activeTab={activeTab} 
+                onSelectTab={(tab) => {
+                  setActiveTab(tab);
+                  setActiveSubTab(tab);
+                }} 
               />
             </div>
           )}
