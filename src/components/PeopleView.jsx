@@ -238,7 +238,7 @@ export default function PeopleView({ customer, onSelectCustomer, onShowToast }) 
             </div>
             <div>
               <div className="text-2xl font-extrabold text-slate-900 tracking-tight">92,341</div>
-              <div className="text-xs font-semibold text-slate-500">Reachable</div>
+              <div className="text-xs font-semibold text-slate-500">Reachable Contacts</div>
             </div>
           </div>
           <span className="px-2 py-0.5 text-xs font-extrabold bg-slate-100 text-slate-700 rounded-md border border-slate-200">
