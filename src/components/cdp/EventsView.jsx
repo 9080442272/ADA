@@ -36,7 +36,8 @@ import {
   Calculator,
   ShoppingBag,
   Mail,
-  ListFilter
+  ListFilter,
+  Trash2
 } from 'lucide-react';
 
 export default function EventsView({ 
@@ -44,9 +45,10 @@ export default function EventsView({
   onShowToast, 
   onNavigateToAccountInteractions, 
   onNavigateToSegments,
-  onNavigateToRecommendation
+  onNavigateToRecommendation,
+  onNavigateToDataSources
 }) {
-  // Navigation Tabs: "stream" | "definitions" | "sources"
+  // Navigation Sub-Tabs: "stream" | "definitions" | "sources"
   const [activeTab, setActiveTab] = useState("stream");
 
   // Event Stream Filters & State
@@ -55,15 +57,179 @@ export default function EventsView({
   const [isLiveStreaming, setIsLiveStreaming] = useState(true);
   const [selectedEventForDrawer, setSelectedEventForDrawer] = useState(null);
 
-  // Modal State for "+ Create Event"
+  // 1. EVENT DEFINITIONS CATALOG STATE (allows dynamic addition via "+ Create Event")
+  const [eventDefinitionsList, setEventDefinitionsList] = useState([
+    {
+      id: "def-1",
+      title: "Viewed myPricing Page",
+      eventKey: "pricing_page_viewed",
+      category: "Web & Product",
+      description: "Triggered when an identified account/contact views the myPricing product page.",
+      propertiesSchema: [
+        { name: "page_url", type: "String", required: true, example: "/products/mypricing" },
+        { name: "duration", type: "Number", required: false, example: "184 sec" },
+        { name: "source", type: "String", required: false, example: "Google Ads" },
+        { name: "campaign_id", type: "String", required: false, example: "Pricing Expansion EU" }
+      ],
+      identityMapping: "Contact → Account",
+      trackingSources: ["Google Tag Manager", "Boostmyshop Web SDK"],
+      usedBySignals: ["myPricing Interest", "Expansion Potential"],
+      usedBySegments: ["High-Intent Accounts", "myPricing Prospects"],
+      monthlyVolume: "412,000 / mo"
+    },
+    {
+      id: "def-2",
+      title: "Downloaded Dynamic Pricing Playbook",
+      eventKey: "playbook_downloaded",
+      category: "Content & Lead Gen",
+      description: "Triggered when a contact submits a form or downloads the B2B pricing whitepaper.",
+      propertiesSchema: [
+        { name: "asset_id", type: "String", required: true, example: "playbook-pricing-v4.pdf" },
+        { name: "form_name", type: "String", required: true, example: "Playbook Download Form" },
+        { name: "referrer", type: "String", required: false, example: "LinkedIn Organic" }
+      ],
+      identityMapping: "Contact → Account",
+      trackingSources: ["HubSpot Connector", "Boostmyshop Web SDK"],
+      usedBySignals: ["Content Evaluation", "Product Interest"],
+      usedBySegments: ["High-Intent Accounts", "Competitor Replacement Target"],
+      monthlyVolume: "84,500 / mo"
+    },
+    {
+      id: "def-3",
+      title: "Attended Competitive Pricing Webinar",
+      eventKey: "webinar_attended",
+      category: "Events & Webinars",
+      description: "Triggered when a contact attends 15+ minutes of a live product or strategy webinar.",
+      propertiesSchema: [
+        { name: "webinar_id", type: "String", required: true, example: "WEB-99102" },
+        { name: "minutes_attended", type: "Number", required: true, example: "42 min" },
+        { name: "questions_asked", type: "Number", required: false, example: "2" }
+      ],
+      identityMapping: "Contact → Account",
+      trackingSources: ["Zoom Connector", "HubSpot Connector"],
+      usedBySignals: ["Executive Engagement", "High Pricing Intent"],
+      usedBySegments: ["High-Intent Accounts", "Enterprise Retailer"],
+      monthlyVolume: "14,200 / mo"
+    },
+    {
+      id: "def-4",
+      title: "ROI Calculator Calculation",
+      eventKey: "roi_calculated",
+      category: "Interactive Tools",
+      description: "Triggered when a prospect calculates estimated annual margin savings on the ROI tool.",
+      propertiesSchema: [
+        { name: "calculated_savings", type: "Number", required: true, example: "14200" },
+        { name: "currency", type: "String", required: true, example: "EUR" },
+        { name: "sku_count", type: "Number", required: false, example: "12500" }
+      ],
+      identityMapping: "Contact → Account",
+      trackingSources: ["Boostmyshop Web SDK"],
+      usedBySignals: ["Commercial Evaluation", "Expansion Readiness"],
+      usedBySegments: ["Expansion Candidates", "myPricing Prospects"],
+      monthlyVolume: "38,000 / mo"
+    },
+    {
+      id: "def-5",
+      title: "Shopify Integration Auth",
+      eventKey: "shopify_auth_completed",
+      category: "Product & API Integration",
+      description: "Triggered when a merchant connects their Shopify store OAuth credentials.",
+      propertiesSchema: [
+        { name: "shop_domain", type: "String", required: true, example: "apex-de.myshopify.com" },
+        { name: "store_count", type: "Number", required: true, example: "14" },
+        { name: "auth_status", type: "String", required: true, example: "Success" }
+      ],
+      identityMapping: "Contact → Account",
+      trackingSources: ["Shopify OAuth Connector"],
+      usedBySignals: ["Technical Onboarding"],
+      usedBySegments: ["E-Commerce Integration Active"],
+      monthlyVolume: "9,400 / mo"
+    },
+    {
+      id: "def-6",
+      title: "Opened Pricing Strategy Email",
+      eventKey: "email_campaign_opened",
+      category: "Outbound Marketing",
+      description: "Triggered when a contact opens an outbound marketing or strategy email campaign.",
+      propertiesSchema: [
+        { name: "campaign_title", type: "String", required: true, example: "Q4 Pricing Alert" },
+        { name: "subject_line", type: "String", required: false, example: "Boost buy box win rate" }
+      ],
+      identityMapping: "Contact → Account",
+      trackingSources: ["Customer.io Connector", "HubSpot Connector"],
+      usedBySignals: ["Campaign Engagement"],
+      usedBySegments: ["Campaign Responsiveness", "myPricing Prospects"],
+      monthlyVolume: "278,000 / mo"
+    }
+  ]);
+
+  // Modal State for "+ Create Event Definition"
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    eventKey: "",
-    category: "Web & Product",
-    description: "",
-    targetSignal: "myPricing Interest"
-  });
+  const [newEventTitle, setNewEventTitle] = useState("");
+  const [newEventKey, setNewEventKey] = useState("");
+  const [newEventCategory, setNewEventCategory] = useState("Web & Product");
+  const [newEventDescription, setNewEventDescription] = useState("");
+  const [newUseForAiSignals, setNewUseForAiSignals] = useState(true);
+  const [newUseForSegmentation, setNewUseForSegmentation] = useState(true);
+  
+  // Interactive Property Rows for Modal
+  const [newEventProperties, setNewEventProperties] = useState([
+    { name: "page_url", type: "String", required: true },
+    { name: "duration", type: "Number", required: false },
+    { name: "source", type: "String", required: false }
+  ]);
+
+  // Add Property Row in Modal
+  const handleAddPropertyRow = () => {
+    setNewEventProperties([
+      ...newEventProperties,
+      { name: "", type: "String", required: false }
+    ]);
+  };
+
+  // Remove Property Row
+  const handleRemovePropertyRow = (index) => {
+    setNewEventProperties(newEventProperties.filter((_, i) => i !== index));
+  };
+
+  // Handle Save Event Definition Form Submit
+  const handleSaveEventDefinition = (e) => {
+    e.preventDefault();
+    if (!newEventTitle.trim()) return;
+
+    const generatedKey = newEventKey.trim() || newEventTitle.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    
+    const newDefItem = {
+      id: `def-${Date.now()}`,
+      title: newEventTitle,
+      eventKey: generatedKey,
+      category: newEventCategory,
+      description: newEventDescription || `Triggered when an identified account/contact performs ${newEventTitle}.`,
+      propertiesSchema: newEventProperties.filter(p => p.name.trim() !== ""),
+      identityMapping: "Contact → Account",
+      trackingSources: ["Google Tag Manager", "Boostmyshop Web SDK"],
+      usedBySignals: newUseForAiSignals ? ["myPricing Interest", "Expansion Potential"] : ["Operational Fact"],
+      usedBySegments: newUseForSegmentation ? ["High-Intent Accounts", "myPricing Prospects"] : ["All Active Accounts"],
+      monthlyVolume: "1,200 / mo (New)"
+    };
+
+    setEventDefinitionsList([newDefItem, ...eventDefinitionsList]);
+    setIsCreateModalOpen(false);
+    setActiveTab("definitions");
+
+    if (onShowToast) {
+      onShowToast(`Event Definition "${newEventTitle}" (${generatedKey}) saved successfully!`);
+    }
+
+    // Reset Form
+    setNewEventTitle("");
+    setNewEventKey("");
+    setNewEventDescription("");
+    setNewEventProperties([
+      { name: "page_url", type: "String", required: true },
+      { name: "duration", type: "Number", required: false }
+    ]);
+  };
 
   // Compact Infrastructure Health Summary (non-hero)
   const healthStats = [
@@ -73,7 +239,7 @@ export default function EventsView({
     { label: "Signal Conversion Rate", value: "94.8%", note: "Behavior → AI Signal" }
   ];
 
-  // 1. EVENT STREAM SAMPLE DATA (Realistic ADA / Boostmyshop B2B events)
+  // 2. REALISTIC EVENT STREAM SAMPLE DATA
   const eventsList = [
     {
       id: "EVT-90412",
@@ -103,7 +269,7 @@ export default function EventsView({
       source: "Google Tag Manager",
       channel: "Web Application",
       activationCampaign: "myPricing Cross-Sell Campaign",
-      surfacedInteraction: "4th visit in 7 days • Viewed myPricing Page"
+      surfacedInteraction: "Viewed myPricing Page (4th visit in 7 days)"
     },
     {
       id: "EVT-90411",
@@ -204,9 +370,9 @@ export default function EventsView({
         "Auth Status": "Success (100% Sync)",
         "API Scope": "read_products, write_inventory"
       },
-      signalGenerated: "Technical Onboarding",
-      signalScore: "+10",
-      signalDescription: "Successful store authentication unlocks multi-channel pricing automation capability.",
+      signalGenerated: "Operational / Direct Event",
+      signalScore: "--",
+      signalDescription: "Technical store connector event. Directly updates account timeline and store count profile attribute.",
       usedInSegments: ["E-Commerce Integration Active"],
       source: "Shopify OAuth Connector",
       channel: "REST API Webhook",
@@ -242,119 +408,7 @@ export default function EventsView({
     }
   ];
 
-  // 2. EVENT DEFINITIONS CATALOG DATA
-  const eventDefinitionsList = [
-    {
-      id: "def-1",
-      title: "Viewed myPricing Page",
-      eventKey: "pricing_page_viewed",
-      category: "Web & Product",
-      description: "Triggered when an identified account/contact views the myPricing product page.",
-      propertiesSchema: [
-        { name: "page_url", type: "String", required: true, example: "/products/mypricing" },
-        { name: "duration", type: "Number", required: false, example: "184 sec" },
-        { name: "source", type: "String", required: false, example: "Google Ads" },
-        { name: "campaign_id", type: "String", required: false, example: "Pricing Expansion EU" },
-        { name: "device", type: "String", required: false, example: "Desktop" }
-      ],
-      identityMapping: "Contact ID → Account ID (via Web Session Cookie)",
-      trackingSources: ["Google Tag Manager", "Boostmyshop Web SDK"],
-      usedBySignals: ["myPricing Interest", "Expansion Potential"],
-      usedBySegments: ["High-Intent Accounts", "myPricing Prospects"],
-      monthlyVolume: "412,000 / mo"
-    },
-    {
-      id: "def-2",
-      title: "Downloaded Dynamic Pricing Playbook",
-      eventKey: "playbook_downloaded",
-      category: "Content & Lead Gen",
-      description: "Triggered when a contact submits a form or downloads the B2B pricing whitepaper.",
-      propertiesSchema: [
-        { name: "asset_id", type: "String", required: true, example: "playbook-pricing-v4.pdf" },
-        { name: "form_name", type: "String", required: true, example: "Playbook Download Form" },
-        { name: "referrer", type: "String", required: false, example: "LinkedIn Organic" },
-        { name: "campaign_id", type: "String", required: false, example: "CMP-88120" }
-      ],
-      identityMapping: "Email → Contact ID → Account ID",
-      trackingSources: ["HubSpot Connector", "Boostmyshop Web SDK"],
-      usedBySignals: ["Content Evaluation", "Product Interest"],
-      usedBySegments: ["High-Intent Accounts", "Competitor Replacement Target"],
-      monthlyVolume: "84,500 / mo"
-    },
-    {
-      id: "def-3",
-      title: "Attended Competitive Pricing Webinar",
-      eventKey: "webinar_attended",
-      category: "Events & Webinars",
-      description: "Triggered when a contact attends 15+ minutes of a live product or strategy webinar.",
-      propertiesSchema: [
-        { name: "webinar_id", type: "String", required: true, example: "WEB-99102" },
-        { name: "minutes_attended", type: "Number", required: true, example: "42 min" },
-        { name: "questions_asked", type: "Number", required: false, example: "2" },
-        { name: "poll_response", type: "String", required: false, example: "Manual Repricing" }
-      ],
-      identityMapping: "Email → Contact ID → Account ID",
-      trackingSources: ["Zoom Connector", "HubSpot Connector"],
-      usedBySignals: ["Executive Engagement", "High Pricing Intent"],
-      usedBySegments: ["High-Intent Accounts", "Enterprise Retailer"],
-      monthlyVolume: "14,200 / mo"
-    },
-    {
-      id: "def-4",
-      title: "ROI Calculator Calculation",
-      eventKey: "roi_calculated",
-      category: "Interactive Tools",
-      description: "Triggered when a prospect calculates estimated annual margin savings on the ROI tool.",
-      propertiesSchema: [
-        { name: "calculated_savings", type: "Number", required: true, example: "14200" },
-        { name: "currency", type: "String", required: true, example: "EUR" },
-        { name: "sku_count", type: "Number", required: false, example: "12500" },
-        { name: "modules_selected", type: "Array", required: false, example: "['myPricing', 'myOrders']" }
-      ],
-      identityMapping: "Session Cookie → Account ID",
-      trackingSources: ["Boostmyshop Web SDK"],
-      usedBySignals: ["Commercial Evaluation", "Expansion Readiness"],
-      usedBySegments: ["Expansion Candidates", "myPricing Prospects"],
-      monthlyVolume: "38,000 / mo"
-    },
-    {
-      id: "def-5",
-      title: "Shopify Integration Auth",
-      eventKey: "shopify_auth_completed",
-      category: "Product & API Integration",
-      description: "Triggered when a merchant connects their Shopify store OAuth credentials.",
-      propertiesSchema: [
-        { name: "shop_domain", type: "String", required: true, example: "apex-de.myshopify.com" },
-        { name: "store_count", type: "Number", required: true, example: "14" },
-        { name: "auth_status", type: "String", required: true, example: "Success" }
-      ],
-      identityMapping: "Shop Domain → Account ID",
-      trackingSources: ["Shopify OAuth Connector"],
-      usedBySignals: ["Technical Onboarding", "Connector Health"],
-      usedBySegments: ["E-Commerce Integration Active"],
-      monthlyVolume: "9,400 / mo"
-    },
-    {
-      id: "def-6",
-      title: "Opened Pricing Strategy Email",
-      eventKey: "email_campaign_opened",
-      category: "Outbound Marketing",
-      description: "Triggered when a contact opens an outbound marketing or strategy email campaign.",
-      propertiesSchema: [
-        { name: "campaign_title", type: "String", required: true, example: "Q4 Pricing Alert" },
-        { name: "subject_line", type: "String", required: false, example: "Boost buy box win rate" },
-        { name: "device", type: "String", required: false, example: "Mobile" },
-        { name: "click_count", type: "Number", required: false, example: "3" }
-      ],
-      identityMapping: "Recipient Email → Contact ID → Account ID",
-      trackingSources: ["Customer.io Connector", "HubSpot Connector"],
-      usedBySignals: ["Campaign Engagement"],
-      usedBySegments: ["Campaign Responsiveness", "myPricing Prospects"],
-      monthlyVolume: "278,000 / mo"
-    }
-  ];
-
-  // 3. TRACKING SOURCES MANAGEMENT DATA
+  // 3. TRACKING SOURCES DATA (Lightweight contextual view connected to Data Sources)
   const trackingSourcesList = [
     {
       id: "src-1",
@@ -363,11 +417,10 @@ export default function EventsView({
       status: "Connected",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
       eventVolume: "412,000 events / mo",
-      lastReceived: "2 mins ago",
+      lastReceived: "2 min ago",
       eventsTrackedCount: 12,
-      trackedEvents: ["Viewed myPricing Page", "Clicked Pricing CTA", "Form Interaction", "Product View"],
-      description: "Captures web client behavior, pageviews, and click interactions on Boostmyshop web properties.",
-      icon: Globe
+      trackedEvents: ["Viewed myPricing Page", "Clicked Pricing CTA", "Form Interaction"],
+      description: "Captures web client behavior, pageviews, and click interactions."
     },
     {
       id: "src-2",
@@ -378,9 +431,8 @@ export default function EventsView({
       eventVolume: "890,000 events / mo",
       lastReceived: "Just now",
       eventsTrackedCount: 18,
-      trackedEvents: ["ROI Calculator Calculation", "Repricing Rule Created", "Margin Audit Triggered"],
-      description: "Embedded JavaScript SDK feeding high-precision product usage telemetry directly to ADA decision engine.",
-      icon: Zap
+      trackedEvents: ["ROI Calculator Calculation", "Repricing Rule Created"],
+      description: "Embedded JavaScript SDK feeding product usage telemetry directly to ADA."
     },
     {
       id: "src-3",
@@ -389,11 +441,10 @@ export default function EventsView({
       status: "Connected",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
       eventVolume: "145,000 events / mo",
-      lastReceived: "14 mins ago",
+      lastReceived: "14 min ago",
       eventsTrackedCount: 8,
-      trackedEvents: ["Downloaded Dynamic Pricing Playbook", "Form Submitted", "Sales Email Activity"],
-      description: "Syncs inbound lead form submissions, marketing content downloads, and contact lifecycle updates.",
-      icon: Database
+      trackedEvents: ["Downloaded Dynamic Pricing Playbook", "Form Submitted"],
+      description: "Syncs inbound lead form submissions and content downloads."
     },
     {
       id: "src-4",
@@ -402,11 +453,10 @@ export default function EventsView({
       status: "Connected",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
       eventVolume: "220,000 events / mo",
-      lastReceived: "5 mins ago",
+      lastReceived: "5 min ago",
       eventsTrackedCount: 15,
-      trackedEvents: ["Shopify Integration Auth", "Amazon Seller API Sync", "Billing Subscription Update"],
-      description: "Inbound REST webhook pipeline receiving marketplace API authentication and store connector events.",
-      icon: Code
+      trackedEvents: ["Shopify Integration Auth", "Amazon Seller API Sync"],
+      description: "Inbound REST webhook pipeline receiving API authentication events."
     }
   ];
 
@@ -420,23 +470,6 @@ export default function EventsView({
     if (selectedCategory === "ALL") return matchesSearch;
     return matchesSearch && evt.category === selectedCategory;
   });
-
-  // Handle "+ Create Event" Form Submit
-  const handleCreateEventSubmit = (e) => {
-    e.preventDefault();
-    if (!newEvent.title.trim()) return;
-    setIsCreateModalOpen(false);
-    if (onShowToast) {
-      onShowToast(`Event Definition "${newEvent.title}" created successfully!`);
-    }
-    setNewEvent({
-      title: "",
-      eventKey: "",
-      category: "Web & Product",
-      description: "",
-      targetSignal: "myPricing Interest"
-    });
-  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
@@ -679,9 +712,15 @@ export default function EventsView({
                           <Sparkles className="w-3.5 h-3.5 text-purple-600 shrink-0" />
                           <span className="font-bold text-slate-900">{evt.signalGenerated}</span>
                         </div>
-                        <span className="inline-block mt-0.5 px-2 py-0.2 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded border border-emerald-200">
-                          {evt.signalScore}
-                        </span>
+                        {evt.signalScore !== "--" ? (
+                          <span className="inline-block mt-0.5 px-2 py-0.2 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded border border-emerald-200">
+                            {evt.signalScore}
+                          </span>
+                        ) : (
+                          <span className="inline-block mt-0.5 text-[10px] text-slate-400 font-medium">
+                            Direct Activity
+                          </span>
+                        )}
                       </td>
 
                       {/* Column 6: Segments */}
@@ -734,7 +773,7 @@ export default function EventsView({
                 Event Definitions Catalog
               </h2>
               <p className="text-xs font-medium text-slate-500 mt-0.5">
-                Standardized behavioral event schema, property types, identity resolution mappings, and downstream AI signals.
+                Standardized behavioral event schemas, property types, and identity resolution mappings.
               </p>
             </div>
 
@@ -743,7 +782,7 @@ export default function EventsView({
               className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl flex items-center space-x-1.5 cursor-pointer shadow-2xs shrink-0"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>New Definition</span>
+              <span>Create Event Definition</span>
             </button>
           </div>
 
@@ -778,7 +817,7 @@ export default function EventsView({
                 {/* Schema / Properties Table */}
                 <div className="space-y-1.5">
                   <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                    Expected Properties & Types
+                    Expected Properties & Data Types
                   </div>
                   <div className="bg-white border border-slate-200 rounded-lg overflow-hidden text-[11px]">
                     {def.propertiesSchema.map((prop, idx) => (
@@ -822,10 +861,10 @@ export default function EventsView({
                   </div>
                 </div>
 
-                {/* Actions */}
+                {/* Actions & Simplified Identity Resolution Wording */}
                 <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 text-xs">
-                  <span className="text-[10px] font-mono text-slate-400">
-                    Identity: {def.identityMapping}
+                  <span className="text-[11px] font-mono text-slate-500">
+                    Identity resolution: <span className="font-extrabold text-slate-800">{def.identityMapping}</span>
                   </span>
                   <div className="flex items-center space-x-2">
                     <button 
@@ -851,99 +890,110 @@ export default function EventsView({
       )}
 
       {/* ==================================================
-          4. TAB 3: TRACKING SOURCES
+          4. TAB 3: TRACKING SOURCES (Lightweight view connected to Data Sources)
       ================================================== */}
       {activeTab === "sources" && (
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-6 animate-in fade-in duration-150">
           
-          <div className="border-b border-slate-100 pb-4">
-            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
-              Tracking Sources Management
-            </h2>
-            <p className="text-xs font-medium text-slate-500 mt-0.5">
-              Configured telemetry ingest connectors and first-party event sources feeding ADA Customer 360.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+                Tracking Sources Health
+              </h2>
+              <p className="text-xs font-medium text-slate-500 mt-0.5">
+                Lightweight operational health for active event telemetry sources feeding ADA Events.
+              </p>
+            </div>
+
+            {/* CTA Button navigating to main Data Sources module */}
+            <button 
+              onClick={() => {
+                if (onNavigateToDataSources) onNavigateToDataSources();
+                if (onShowToast) onShowToast("Navigated to global Data Sources module");
+              }}
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 cursor-pointer transition-all shrink-0"
+            >
+              <span>Manage in Data Sources</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {trackingSourcesList.map((src) => {
-              const SourceIcon = src.icon;
-              return (
-                <div key={src.id} className="bg-slate-50/80 border border-slate-200 rounded-xl p-5 space-y-4 hover:border-slate-300 transition-all shadow-2xs">
-                  
-                  {/* Source Header */}
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-indigo-600 font-bold shadow-2xs">
-                        <SourceIcon className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <h3 className="text-base font-extrabold text-slate-900">{src.name}</h3>
-                        <div className="text-xs text-slate-500 font-medium">{src.type}</div>
-                      </div>
-                    </div>
+          {/* Contextual Tracking Sources Table */}
+          <div className="overflow-x-auto border border-slate-200/90 rounded-xl">
+            <table className="w-full text-left text-xs">
+              <thead>
+                <tr className="bg-slate-900 text-slate-300 text-[10px] uppercase font-extrabold tracking-wider border-b border-slate-800">
+                  <th className="py-3 px-4">Tracking Source</th>
+                  <th className="py-3 px-4">Source Type</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Events Tracked</th>
+                  <th className="py-3 px-4">Last Received</th>
+                  <th className="py-3 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 font-medium text-slate-700 bg-white">
+                {trackingSourcesList.map((src) => (
+                  <tr key={src.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-3 px-4 font-extrabold text-slate-900 flex items-center space-x-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span>{src.name}</span>
+                    </td>
+                    <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">{src.type}</td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded ${src.statusBadge}`}>
+                        ✓ {src.status}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right font-extrabold text-slate-900">{src.eventsTrackedCount} events</td>
+                    <td className="py-3 px-4 text-emerald-600 font-bold">{src.lastReceived}</td>
+                    <td className="py-3 px-4 text-right">
+                      <button
+                        onClick={() => {
+                          if (onNavigateToDataSources) onNavigateToDataSources();
+                        }}
+                        className="text-indigo-600 hover:text-indigo-800 font-extrabold text-xs inline-flex items-center space-x-1 cursor-pointer"
+                      >
+                        <span>Manage sources</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-                    <span className={`px-2.5 py-1 text-[11px] font-extrabold rounded-md border ${src.statusBadge}`}>
-                      ✓ {src.status}
-                    </span>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed bg-white p-3 rounded-lg border border-slate-200/80">
-                    {src.description}
-                  </p>
-
-                  {/* Metrics Row */}
-                  <div className="grid grid-cols-3 gap-2 text-center bg-white p-3 rounded-lg border border-slate-200/80">
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">Monthly Volume</div>
-                      <div className="text-xs font-black text-slate-900 mt-0.5">{src.eventVolume}</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">Last Received</div>
-                      <div className="text-xs font-bold text-emerald-600 mt-0.5">{src.lastReceived}</div>
-                    </div>
-                    <div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">Events Tracked</div>
-                      <div className="text-xs font-black text-slate-900 mt-0.5">{src.eventsTrackedCount} events</div>
-                    </div>
-                  </div>
-
-                  {/* Sample Tracked Events List */}
-                  <div className="space-y-1.5 pt-1">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                      Active Event Types Tracked
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {src.trackedEvents.map((eName, idx) => (
-                        <span key={idx} className="px-2 py-0.5 bg-slate-200/70 text-slate-700 font-bold text-[10px] rounded">
-                          {eName}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Configure Action */}
-                  <div className="pt-2 border-t border-slate-200/70 flex justify-end">
-                    <button 
-                      onClick={() => onShowToast && onShowToast(`Opened settings for ${src.name}`)}
-                      className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-800 font-bold text-xs rounded-lg border border-slate-300 cursor-pointer shadow-2xs flex items-center space-x-1"
-                    >
-                      <Settings className="w-3.5 h-3.5 text-slate-500" />
-                      <span>Configure Connector</span>
-                    </button>
-                  </div>
-
+          {/* Sub-Card Grid for Source Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            {trackingSourcesList.map((src) => (
+              <div key={src.id} className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-slate-900 text-sm">{src.name}</h4>
+                  <span className="text-[11px] font-mono text-slate-500">{src.eventVolume}</span>
                 </div>
-              );
-            })}
+                <p className="text-xs text-slate-600 font-medium">
+                  {src.description}
+                </p>
+                <div className="pt-2 flex items-center justify-between border-t border-slate-200/60 text-[11px]">
+                  <span className="text-slate-400 font-medium">Sample Events: {src.trackedEvents.join(", ")}</span>
+                  <button 
+                    onClick={() => {
+                      if (onNavigateToDataSources) onNavigateToDataSources();
+                    }}
+                    className="text-indigo-600 font-bold hover:underline cursor-pointer"
+                  >
+                    Configure →
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
         </div>
       )}
 
       {/* ==================================================
-          5. EVENT INSPECTOR DRAWER (6-SECTION BREAKDOWN)
+          5. EVENT INSPECTOR DRAWER (WITH DIRECT PROFILE LINK)
       ================================================== */}
       {selectedEventForDrawer && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex justify-end animate-in fade-in duration-200">
@@ -998,11 +1048,22 @@ export default function EventsView({
                 </div>
               </div>
 
-              {/* SECTION 2 — IDENTITY */}
+              {/* SECTION 2 — IDENTITY RESOLUTION */}
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-                <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider flex items-center space-x-1.5">
-                  <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
-                  <span>SECTION 2 — IDENTITY RESOLUTION</span>
+                <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+                  <span className="flex items-center space-x-1.5">
+                    <UserCheck className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>SECTION 2 — IDENTITY RESOLUTION</span>
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSelectedEventForDrawer(null);
+                      if (onNavigateToAccountInteractions) onNavigateToAccountInteractions();
+                    }}
+                    className="text-indigo-600 hover:text-indigo-800 font-extrabold text-[11px] inline-flex items-center space-x-1 cursor-pointer"
+                  >
+                    <span>View in Account →</span>
+                  </button>
                 </div>
                 <div className="grid grid-cols-3 gap-3 bg-white p-3 rounded-lg border border-slate-200/80">
                   <div>
@@ -1018,12 +1079,9 @@ export default function EventsView({
                     <div className="font-mono font-bold text-indigo-700 text-xs mt-0.5">{selectedEventForDrawer.accountId}</div>
                   </div>
                 </div>
-                <p className="text-[11px] font-medium text-slate-500">
-                  Identity resolved automatically from web session cookie to account graph record.
-                </p>
               </div>
 
-              {/* SECTION 3 — ACCOUNT 360 */}
+              {/* SECTION 3 — ACCOUNT 360 (PROFILES CONNECTION) */}
               <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl space-y-3">
                 <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider flex items-center justify-between">
                   <span className="flex items-center space-x-1.5">
@@ -1031,23 +1089,25 @@ export default function EventsView({
                     <span>SECTION 3 — SURFACED IN ACCOUNT 360</span>
                   </span>
                   <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded">
-                    Active on Timeline
+                    Live on Account Profile
                   </span>
                 </div>
 
-                <div className="bg-white p-3 rounded-lg border border-slate-200/80 font-bold text-slate-900">
-                  {selectedEventForDrawer.surfacedInteraction}
+                <div className="bg-white p-3 rounded-lg border border-slate-200/80 font-bold text-slate-900 flex items-center justify-between">
+                  <span>{selectedEventForDrawer.surfacedInteraction}</span>
+                  <span className="text-[10px] font-mono text-slate-400">Account Timeline</span>
                 </div>
 
+                {/* Primary CTA connecting Event directly back to Profile */}
                 <button 
                   onClick={() => {
                     setSelectedEventForDrawer(null);
                     if (onNavigateToAccountInteractions) onNavigateToAccountInteractions();
                   }}
-                  className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-lg shadow-2xs flex items-center justify-center space-x-1.5 cursor-pointer transition-all"
+                  className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xs rounded-xl shadow-2xs flex items-center justify-center space-x-1.5 cursor-pointer transition-all"
                 >
                   <span>View Account Interactions</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
 
@@ -1055,15 +1115,21 @@ export default function EventsView({
               <div className="bg-purple-50/90 border border-purple-200 p-4 rounded-xl space-y-2">
                 <div className="text-[10px] font-extrabold text-purple-700 uppercase tracking-wider flex items-center space-x-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                  <span>SECTION 4 — CONTRIBUTES TO AI SIGNAL</span>
+                  <span>SECTION 4 — AI SIGNAL DERIVED</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="font-black text-purple-950 text-base">
                     {selectedEventForDrawer.signalGenerated}
                   </div>
-                  <span className="px-2.5 py-0.5 bg-purple-200/80 text-purple-900 font-extrabold text-xs rounded-full border border-purple-300">
-                    {selectedEventForDrawer.signalScore}
-                  </span>
+                  {selectedEventForDrawer.signalScore !== "--" ? (
+                    <span className="px-2.5 py-0.5 bg-purple-200/80 text-purple-900 font-extrabold text-xs rounded-full border border-purple-300">
+                      {selectedEventForDrawer.signalScore}
+                    </span>
+                  ) : (
+                    <span className="px-2 py-0.5 bg-slate-200 text-slate-700 font-bold text-[10px] rounded">
+                      Direct Event
+                    </span>
+                  )}
                 </div>
                 <p className="text-purple-900 leading-relaxed font-medium bg-white/70 p-2.5 rounded-lg border border-purple-200/60 text-[11px]">
                   "{selectedEventForDrawer.signalDescription}"
@@ -1144,18 +1210,21 @@ export default function EventsView({
       )}
 
       {/* ==================================================
-          6. MODAL: "+ CREATE EVENT DEFINITION"
+          6. MODAL: "+ CREATE EVENT DEFINITION" WORKFLOW
       ================================================== */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl border border-slate-200 max-w-lg w-full p-6 space-y-5 shadow-2xl animate-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl border border-slate-200 max-w-xl w-full p-6 space-y-5 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
                   <Plus className="w-4 h-4" />
                 </div>
-                <h3 className="text-lg font-black text-slate-900">Create Event Definition</h3>
+                <div>
+                  <h3 className="text-lg font-black text-slate-900">Create Event Definition</h3>
+                  <p className="text-xs text-slate-500 font-medium">Define a new customer behavioral event schema and properties.</p>
+                </div>
               </div>
               <button 
                 onClick={() => setIsCreateModalOpen(false)}
@@ -1165,78 +1234,182 @@ export default function EventsView({
               </button>
             </div>
 
-            <form onSubmit={handleCreateEventSubmit} className="space-y-4 text-xs font-medium">
+            <form onSubmit={handleSaveEventDefinition} className="space-y-4 text-xs font-medium">
               
-              <div className="space-y-1">
-                <label className="text-slate-700 font-bold">Event Title</label>
-                <input 
-                  type="text"
-                  placeholder="e.g. Added Items to Repricing Queue"
-                  value={newEvent.title}
-                  onChange={(e) => {
-                    const title = e.target.value;
-                    const key = title.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-                    setNewEvent({ ...newEvent, title, eventKey: key });
-                  }}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-slate-700 font-bold">Event Key (System ID)</label>
-                <input 
-                  type="text"
-                  placeholder="e.g. repricing_queue_added"
-                  value={newEvent.eventKey}
-                  onChange={(e) => setNewEvent({ ...newEvent, eventKey: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-xl font-mono text-slate-900 bg-slate-50 focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
+              {/* Event Name & Key */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-slate-700 font-bold">Category</label>
-                  <select
-                    value={newEvent.category}
-                    onChange={(e) => setNewEvent({ ...newEvent, category: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:outline-none"
-                  >
-                    <option value="Web & Product">Web & Product</option>
-                    <option value="Content & Lead Gen">Content & Lead Gen</option>
-                    <option value="Events & Webinars">Events & Webinars</option>
-                    <option value="Interactive Tools">Interactive Tools</option>
-                    <option value="Product & API Integration">Product & API Integration</option>
-                  </select>
+                  <label className="text-slate-700 font-bold">Event Name</label>
+                  <input 
+                    type="text"
+                    placeholder="e.g. Viewed Pricing Page"
+                    value={newEventTitle}
+                    onChange={(e) => {
+                      const title = e.target.value;
+                      const key = title.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+                      setNewEventTitle(title);
+                      setNewEventKey(key);
+                    }}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required
+                  />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-slate-700 font-bold">Target AI Signal</label>
-                  <select
-                    value={newEvent.targetSignal}
-                    onChange={(e) => setNewEvent({ ...newEvent, targetSignal: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:outline-none"
-                  >
-                    <option value="myPricing Interest">myPricing Interest</option>
-                    <option value="Expansion Potential">Expansion Potential</option>
-                    <option value="Executive Engagement">Executive Engagement</option>
-                    <option value="Commercial Evaluation">Commercial Evaluation</option>
-                  </select>
+                  <label className="text-slate-700 font-bold">Event Key (System ID)</label>
+                  <input 
+                    type="text"
+                    placeholder="e.g. pricing_page_viewed"
+                    value={newEventKey}
+                    onChange={(e) => setNewEventKey(e.target.value)}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-xl font-mono text-slate-900 bg-slate-50 focus:outline-none"
+                    required
+                  />
                 </div>
+              </div>
+
+              {/* Category & Description */}
+              <div className="space-y-1">
+                <label className="text-slate-700 font-bold">Category</label>
+                <select
+                  value={newEventCategory}
+                  onChange={(e) => setNewEventCategory(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold text-slate-900 focus:outline-none cursor-pointer"
+                >
+                  <option value="Web & Product">Web & Product</option>
+                  <option value="Content & Lead Gen">Content & Lead Gen</option>
+                  <option value="Events & Webinars">Events & Webinars</option>
+                  <option value="Interactive Tools">Interactive Tools</option>
+                  <option value="Product & API Integration">Product & API Integration</option>
+                </select>
               </div>
 
               <div className="space-y-1">
                 <label className="text-slate-700 font-bold">Description</label>
                 <textarea 
-                  rows={3}
-                  placeholder="Describe when this event is triggered..."
-                  value={newEvent.description}
-                  onChange={(e) => setNewEvent({ ...newEvent, description: e.target.value })}
+                  rows={2}
+                  placeholder="Triggered when an identified account/contact views a pricing page..."
+                  value={newEventDescription}
+                  onChange={(e) => setNewEventDescription(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
+              {/* Dynamic Properties Builder */}
+              <div className="space-y-2 pt-2 border-t border-slate-100">
+                <div className="flex items-center justify-between">
+                  <label className="text-slate-800 font-extrabold uppercase text-[10px] tracking-wider">
+                    Properties Schema Builder
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleAddPropertyRow}
+                    className="text-indigo-600 hover:text-indigo-800 font-bold text-xs flex items-center space-x-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add property</span>
+                  </button>
+                </div>
+
+                <div className="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                  {newEventProperties.map((prop, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <input 
+                        type="text"
+                        placeholder="property_name"
+                        value={prop.name}
+                        onChange={(e) => {
+                          const updated = [...newEventProperties];
+                          updated[idx].name = e.target.value;
+                          setNewEventProperties(updated);
+                        }}
+                        className="flex-1 px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-mono text-slate-900 focus:outline-none"
+                      />
+
+                      <select
+                        value={prop.type}
+                        onChange={(e) => {
+                          const updated = [...newEventProperties];
+                          updated[idx].type = e.target.value;
+                          setNewEventProperties(updated);
+                        }}
+                        className="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none"
+                      >
+                        <option value="String">String</option>
+                        <option value="Number">Number</option>
+                        <option value="Boolean">Boolean</option>
+                        <option value="Array">Array</option>
+                      </select>
+
+                      <select
+                        value={prop.required ? "Required" : "Optional"}
+                        onChange={(e) => {
+                          const updated = [...newEventProperties];
+                          updated[idx].required = e.target.value === "Required";
+                          setNewEventProperties(updated);
+                        }}
+                        className="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-800 focus:outline-none"
+                      >
+                        <option value="Required">Required</option>
+                        <option value="Optional">Optional</option>
+                      </select>
+
+                      <button 
+                        type="button"
+                        onClick={() => handleRemovePropertyRow(idx)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Identity Resolution Badge */}
+              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between">
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Identity Resolution Pathway</div>
+                  <div className="font-extrabold text-slate-900 text-xs mt-0.5 flex items-center space-x-2">
+                    <span>Contact ID</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                    <span className="text-indigo-600">Account ID</span>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-extrabold rounded">
+                  Resolved
+                </span>
+              </div>
+
+              {/* Used For Checkboxes */}
+              <div className="space-y-1 pt-1 border-t border-slate-100">
+                <label className="text-slate-800 font-extrabold uppercase text-[10px] tracking-wider">
+                  Used For
+                </label>
+                <div className="flex items-center space-x-6 text-xs font-bold text-slate-800">
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input 
+                      type="checkbox"
+                      checked={newUseForAiSignals}
+                      onChange={(e) => setNewUseForAiSignals(e.target.checked)}
+                      className="rounded text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>AI Signals</span>
+                  </label>
+
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input 
+                      type="checkbox"
+                      checked={newUseForSegmentation}
+                      onChange={(e) => setNewUseForSegmentation(e.target.checked)}
+                      className="rounded text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span>Segmentation</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Modal Actions */}
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end space-x-2">
                 <button
                   type="button"
@@ -1247,9 +1420,10 @@ export default function EventsView({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs cursor-pointer"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs cursor-pointer flex items-center space-x-1"
                 >
-                  Save Definition
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <span>Save Event Definition</span>
                 </button>
               </div>
 

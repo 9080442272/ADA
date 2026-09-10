@@ -210,6 +210,9 @@ export default function App() {
                     onNavigateToRecommendation={() => {
                       setSelectedActionForModal(customer.primaryAction);
                     }}
+                    onNavigateToDataSources={() => {
+                      setActiveSubTab("Data Sources");
+                    }}
                   />
                 )}
                 {activeSubTab === "Tags & DNC" && <TagsDncView customer={customer} onShowToast={showToast} />}
