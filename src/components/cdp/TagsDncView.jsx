@@ -217,8 +217,8 @@ export default function TagsDncView({ customer, onShowToast }) {
     }
   ]);
 
-  // Selected Contact for Right Drawer / Panel (Default: Antoine Laurent)
-  const [selectedContact, setSelectedContact] = useState(contactsList[0]);
+  // Selected Contact for Right Drawer / Panel (Default: null - opens on row click)
+  const [selectedContact, setSelectedContact] = useState(null);
   const [activePanelTab, setActivePanelTab] = useState("Preferences");
   
   // Table Filters
@@ -293,579 +293,573 @@ export default function TagsDncView({ customer, onShowToast }) {
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       
-      {/* ==================================================
-          MAIN 2-COLUMN GRID (Matching Screenshot)
-      ================================================== */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-        
-        {/* LEFT COLUMN: Main Header, Tags, Contacts Table (8 Cols) */}
-        <div className="xl:col-span-8 space-y-6">
-          
-          {/* HEADER CARD */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-2">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200/80 flex items-center justify-center font-bold shadow-2xs shrink-0">
-                <Tag className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="flex items-center space-x-2.5">
-                  <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                    Tags & Contact Preferences
-                  </h1>
-                  <span className="px-2.5 py-0.5 text-[11px] font-extrabold bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200">
-                    Governance
-                  </span>
-                </div>
-                <p className="text-xs font-medium text-slate-500 mt-0.5">
-                  Organize account taxonomy tags and manage contact-level communication preferences for TechGear Europe (ACC-89420-EU).
-                </p>
-              </div>
-            </div>
+      {/* HEADER CARD */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-2">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200/80 flex items-center justify-center font-bold shadow-2xs shrink-0">
+            <Tag className="w-5 h-5" />
           </div>
-
-          {/* CARD 1: ACCOUNT TAXONOMY TAGS */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-4">
-            
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
-                <Tag className="w-4 h-4 text-indigo-600" />
-                <span>ACCOUNT TAXONOMY TAGS</span>
-              </h2>
-              <span className="text-xs font-semibold text-slate-400">
-                {tags.length} Active Tags
+          <div>
+            <div className="flex items-center space-x-2.5">
+              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
+                Tags & Contact Preferences
+              </h1>
+              <span className="px-2.5 py-0.5 text-[11px] font-extrabold bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200">
+                Governance
               </span>
             </div>
-
-            {/* Tag Input Form */}
-            <form onSubmit={handleAddTag} className="flex items-center space-x-2 max-w-lg">
-              <input 
-                type="text"
-                placeholder="Add new tag (e.g. Q4 Target)..."
-                value={newTagInput}
-                onChange={(e) => setNewTagInput(e.target.value)}
-                className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-              <button 
-                type="submit"
-                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1 cursor-pointer transition-all active:scale-95 shrink-0"
-              >
-                <Plus className="w-4 h-4" />
-                <span>Add Tag</span>
-              </button>
-            </form>
-
-            {/* Active Tags List */}
-            <div className="flex flex-wrap gap-2 pt-1">
-              {tags.map((t) => (
-                <span key={t} className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 flex items-center space-x-2 transition-all shadow-2xs">
-                  <span>{t}</span>
-                  <button 
-                    onClick={() => handleRemoveTag(t)}
-                    className="text-slate-400 hover:text-red-600 font-black cursor-pointer text-sm transition-colors"
-                    title="Remove tag"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
-
+            <p className="text-xs font-medium text-slate-500 mt-0.5">
+              Organize account taxonomy tags and manage contact-level communication preferences for TechGear Europe (ACC-89420-EU).
+            </p>
           </div>
+        </div>
+      </div>
 
-          {/* CARD 2: CONTACTS & CHANNEL PREFERENCES TABLE */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-4">
-            
-            <div className="border-b border-slate-100 pb-3">
-              <div className="flex items-center space-x-2">
-                <Users className="w-4 h-4 text-indigo-600" />
-                <h2 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
-                  CONTACTS & CHANNEL PREFERENCES
-                </h2>
-              </div>
-              <p className="text-xs text-slate-500 font-medium mt-0.5">
-                View and manage communication preferences for contacts at this account.
-              </p>
-            </div>
-
-            {/* Search & Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
-              
-              {/* Search */}
-              <div className="relative flex-1 w-full">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                <input 
-                  type="text"
-                  placeholder="Search contacts by name, email, or role..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-4 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-              </div>
-
-              {/* Dropdown & Filter Button */}
-              <div className="flex items-center space-x-2 w-full sm:w-auto">
-                <select 
-                  value={selectedRoleFilter}
-                  onChange={(e) => setSelectedRoleFilter(e.target.value)}
-                  className="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 focus:outline-none cursor-pointer"
-                >
-                  <option value="All Contacts (8)">All Contacts (8)</option>
-                  <option value="Executive">Executive Only</option>
-                  <option value="Subscribed">Subscribed Only</option>
-                </select>
-
-                <button 
-                  onClick={() => onShowToast && onShowToast("Filters applied")}
-                  className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 rounded-lg text-xs font-bold text-slate-700 flex items-center space-x-1.5 cursor-pointer shadow-2xs"
-                >
-                  <Filter className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Filter</span>
-                </button>
-              </div>
-
-            </div>
-
-            {/* Contacts Table */}
-            <div className="overflow-x-auto border border-slate-200/90 rounded-xl">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="bg-slate-50 text-slate-600 text-[10px] uppercase font-extrabold tracking-wider border-b border-slate-200">
-                    <th className="py-3 px-3 w-8">
-                      <input type="checkbox" className="rounded text-indigo-600 focus:ring-indigo-500" />
-                    </th>
-                    <th className="py-3 px-3">CONTACT</th>
-                    <th className="py-3 px-3">ROLE</th>
-                    <th className="py-3 px-3">EMAIL</th>
-                    <th className="py-3 px-3">WHATSAPP</th>
-                    <th className="py-3 px-3">SMS</th>
-                    <th className="py-3 px-3">LAST ACTIVITY</th>
-                    <th className="py-3 px-3 text-right">ACTIONS</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-200 font-medium text-slate-700 bg-white">
-                  {filteredContacts.map((cnt) => {
-                    const isSelected = selectedContact?.id === cnt.id;
-                    return (
-                      <tr 
-                        key={cnt.id}
-                        onClick={() => setSelectedContact(cnt)}
-                        className={`transition-colors cursor-pointer ${
-                          isSelected ? 'bg-indigo-50/60 font-semibold' : 'hover:bg-slate-50/90'
-                        }`}
-                      >
-                        {/* Checkbox */}
-                        <td className="py-3.5 px-3">
-                          <input 
-                            type="checkbox" 
-                            checked={isSelected}
-                            onChange={() => setSelectedContact(cnt)}
-                            className="rounded text-indigo-600 focus:ring-indigo-500"
-                          />
-                        </td>
-
-                        {/* Contact Name & Email */}
-                        <td className="py-3.5 px-3">
-                          <div className="flex items-center space-x-2.5">
-                            <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0 ${cnt.initialsBg}`}>
-                              {cnt.initials}
-                            </div>
-                            <div>
-                              <div className="font-extrabold text-slate-900 text-xs">
-                                {cnt.name}
-                              </div>
-                              <div className="text-[11px] text-slate-400 font-mono">
-                                {cnt.email}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-
-                        {/* Role */}
-                        <td className="py-3.5 px-3">
-                          <span className="text-slate-600 font-bold text-[11px]">
-                            {cnt.role}
-                          </span>
-                        </td>
-
-                        {/* Email Badge */}
-                        <td className="py-3.5 px-3">
-                          {cnt.emailStatus === "Subscribed" ? (
-                            <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-md border border-emerald-200 inline-block">
-                              ✓ Subscribed
-                            </span>
-                          ) : (
-                            <span className="px-2.5 py-0.5 bg-slate-100 text-slate-500 font-semibold text-[10px] rounded-md border border-slate-200 inline-block">
-                              Not Set
-                            </span>
-                          )}
-                        </td>
-
-                        {/* WhatsApp Badge */}
-                        <td className="py-3.5 px-3">
-                          {cnt.whatsappStatus === "Subscribed" ? (
-                            <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-md border border-emerald-200 inline-block">
-                              ✓ Subscribed
-                            </span>
-                          ) : cnt.whatsappStatus === "Do Not Contact" ? (
-                            <span className="px-2.5 py-0.5 bg-red-100 text-red-800 font-extrabold text-[10px] rounded-md border border-red-200 inline-block">
-                              ⛔ Do Not Contact
-                            </span>
-                          ) : (
-                            <span className="px-2.5 py-0.5 bg-slate-100 text-slate-500 font-semibold text-[10px] rounded-md border border-slate-200 inline-block">
-                              Not Set
-                            </span>
-                          )}
-                        </td>
-
-                        {/* SMS Badge */}
-                        <td className="py-3.5 px-3">
-                          {cnt.smsStatus === "Subscribed" ? (
-                            <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-md border border-emerald-200 inline-block">
-                              ✓ Subscribed
-                            </span>
-                          ) : cnt.smsStatus === "Do Not Contact" ? (
-                            <span className="px-2.5 py-0.5 bg-red-100 text-red-800 font-extrabold text-[10px] rounded-md border border-red-200 inline-block">
-                              ⛔ Do Not Contact
-                            </span>
-                          ) : (
-                            <span className="px-2.5 py-0.5 bg-slate-100 text-slate-500 font-semibold text-[10px] rounded-md border border-slate-200 inline-block">
-                              Not Set
-                            </span>
-                          )}
-                        </td>
-
-                        {/* Last Activity */}
-                        <td className="py-3.5 px-3 text-[11px] text-slate-500 font-medium">
-                          {cnt.lastActivity}
-                        </td>
-
-                        {/* Actions */}
-                        <td className="py-3.5 px-3 text-right">
-                          <div className="flex items-center justify-end space-x-1">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedContact(cnt);
-                              }}
-                              className="px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-extrabold text-[11px] rounded-lg border border-indigo-200 cursor-pointer transition-colors"
-                            >
-                              Manage
-                            </button>
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                if (onShowToast) onShowToast(`Contact options for ${cnt.name}`);
-                              }}
-                              className="p-1 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
-                            >
-                              <MoreHorizontal className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Table Footer */}
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium pt-1">
-              <span>Showing 5 of 8 contacts</span>
-              
-              <div className="flex items-center space-x-1">
-                <button className="p-1 border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600 disabled:opacity-50">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
-                <button className="px-3 py-1 bg-indigo-600 text-white font-bold rounded-lg text-xs">
-                  1
-                </button>
-                <button className="px-3 py-1 hover:bg-slate-100 text-slate-700 font-bold rounded-lg text-xs">
-                  2
-                </button>
-                <button className="p-1 border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-          </div>
-
+      {/* CARD 1: ACCOUNT TAXONOMY TAGS */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-4">
+        
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center space-x-2">
+            <Tag className="w-4 h-4 text-indigo-600" />
+            <span>ACCOUNT TAXONOMY TAGS</span>
+          </h2>
+          <span className="text-xs font-semibold text-slate-400">
+            {tags.length} Active Tags
+          </span>
         </div>
 
-        {/* RIGHT COLUMN: Contact Preferences Inspector Panel (4 Cols) */}
-        <div className="xl:col-span-4 bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-5">
-          
-          {selectedContact ? (
-            <>
-              {/* Contact Profile Summary */}
-              <div className="flex items-start justify-between border-b border-slate-100 pb-4">
-                <div className="flex items-center space-x-3">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-base shadow-2xs ${selectedContact.initialsBg}`}>
-                    {selectedContact.initials}
-                  </div>
-                  <div>
-                    <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
-                      {selectedContact.name}
-                    </h3>
-                    <div className="text-xs text-slate-500 font-semibold">{selectedContact.role}</div>
-                    <div className="text-[11px] text-slate-400 font-mono mt-0.5">{selectedContact.email}</div>
-                  </div>
-                </div>
+        {/* Tag Input Form */}
+        <form onSubmit={handleAddTag} className="flex items-center space-x-2 max-w-lg">
+          <input 
+            type="text"
+            placeholder="Add new tag (e.g. Q4 Target)..."
+            value={newTagInput}
+            onChange={(e) => setNewTagInput(e.target.value)}
+            className="flex-1 px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          />
+          <button 
+            type="submit"
+            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1 cursor-pointer transition-all active:scale-95 shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Tag</span>
+          </button>
+        </form>
 
-                <button 
-                  onClick={() => onShowToast && onShowToast("Closed contact panel")}
-                  className="text-slate-400 hover:text-slate-700 p-1 rounded-lg cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Sub-Tabs: Preferences | Details | Activity */}
-              <div className="flex items-center border-b border-slate-200 text-xs font-bold">
-                <button
-                  onClick={() => setActivePanelTab("Preferences")}
-                  className={`pb-2.5 px-3 border-b-2 cursor-pointer transition-colors ${
-                    activePanelTab === "Preferences"
-                      ? 'border-indigo-600 text-indigo-600 font-extrabold'
-                      : 'border-transparent text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  Preferences
-                </button>
-
-                <button
-                  onClick={() => setActivePanelTab("Details")}
-                  className={`pb-2.5 px-3 border-b-2 cursor-pointer transition-colors ${
-                    activePanelTab === "Details"
-                      ? 'border-indigo-600 text-indigo-600 font-extrabold'
-                      : 'border-transparent text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  Details
-                </button>
-
-                <button
-                  onClick={() => setActivePanelTab("Activity")}
-                  className={`pb-2.5 px-3 border-b-2 cursor-pointer transition-colors ${
-                    activePanelTab === "Activity"
-                      ? 'border-indigo-600 text-indigo-600 font-extrabold'
-                      : 'border-transparent text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  Activity
-                </button>
-              </div>
-
-              {activePanelTab === "Preferences" && (
-                <div className="space-y-5 animate-in fade-in duration-150">
-                  
-                  {/* Channel Preferences Section */}
-                  <div className="space-y-3">
-                    <div>
-                      <h4 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
-                        Channel Preferences
-                      </h4>
-                      <p className="text-[11px] text-slate-500 font-medium">
-                        Manage communication preferences and consent status for this contact.
-                      </p>
-                    </div>
-
-                    {/* Email Card */}
-                    <div 
-                      onClick={() => setEditingChannel("email")}
-                      className="p-3.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 rounded-xl space-y-2 cursor-pointer transition-all group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center">
-                            <Mail className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="font-extrabold text-slate-900 text-xs">Email</span>
-                        </div>
-
-                        <div className="flex items-center space-x-1.5">
-                          <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${
-                            selectedContact.preferences.email.status === "Subscribed" 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              : 'bg-slate-200 text-slate-700 border-slate-300'
-                          }`}>
-                            ✓ {selectedContact.preferences.email.status}
-                          </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
-                        </div>
-                      </div>
-
-                      <p className="text-[11px] text-slate-600 font-medium">
-                        {selectedContact.preferences.email.subtext}
-                      </p>
-
-                      <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-200/60">
-                        <span>{selectedContact.preferences.email.source}</span>
-                        <span>{selectedContact.preferences.email.updated}</span>
-                      </div>
-                    </div>
-
-                    {/* WhatsApp Card */}
-                    <div 
-                      onClick={() => setEditingChannel("whatsapp")}
-                      className="p-3.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 rounded-xl space-y-2 cursor-pointer transition-all group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
-                            <MessageSquare className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="font-extrabold text-slate-900 text-xs">WhatsApp</span>
-                        </div>
-
-                        <div className="flex items-center space-x-1.5">
-                          <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${
-                            selectedContact.preferences.whatsapp.status === "Subscribed" 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              : selectedContact.preferences.whatsapp.status === "Do Not Contact"
-                              ? 'bg-red-100 text-red-800 border-red-200'
-                              : 'bg-slate-200 text-slate-700 border-slate-300'
-                          }`}>
-                            {selectedContact.preferences.whatsapp.status === "Subscribed" ? "✓ Subscribed" : selectedContact.preferences.whatsapp.status === "Do Not Contact" ? "⛔ Do Not Contact" : "Not Set"}
-                          </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
-                        </div>
-                      </div>
-
-                      <p className="text-[11px] text-slate-600 font-medium">
-                        {selectedContact.preferences.whatsapp.subtext}
-                      </p>
-
-                      <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-200/60">
-                        <span>{selectedContact.preferences.whatsapp.source}</span>
-                        <span>{selectedContact.preferences.whatsapp.updated}</span>
-                      </div>
-                    </div>
-
-                    {/* SMS Card */}
-                    <div 
-                      onClick={() => setEditingChannel("sms")}
-                      className="p-3.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 rounded-xl space-y-2 cursor-pointer transition-all group"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-7 h-7 rounded-lg bg-red-50 text-red-600 border border-red-200 flex items-center justify-center">
-                            <PhoneCall className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="font-extrabold text-slate-900 text-xs">SMS</span>
-                        </div>
-
-                        <div className="flex items-center space-x-1.5">
-                          <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${
-                            selectedContact.preferences.sms.status === "Subscribed" 
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              : selectedContact.preferences.sms.status === "Do Not Contact"
-                              ? 'bg-red-100 text-red-800 border-red-200'
-                              : 'bg-slate-200 text-slate-700 border-slate-300'
-                          }`}>
-                            {selectedContact.preferences.sms.status === "Subscribed" ? "✓ Subscribed" : selectedContact.preferences.sms.status === "Do Not Contact" ? "⛔ Do Not Contact" : "Not Set"}
-                          </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
-                        </div>
-                      </div>
-
-                      <p className="text-[11px] text-slate-600 font-medium">
-                        {selectedContact.preferences.sms.subtext}
-                      </p>
-
-                      <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-200/60">
-                        <span>{selectedContact.preferences.sms.source}</span>
-                        <span>{selectedContact.preferences.sms.updated}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Consent History Timeline Section */}
-                  <div className="space-y-3 pt-2 border-t border-slate-100">
-                    <div className="flex items-center justify-between">
-                      <h4 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
-                        Consent History
-                      </h4>
-                      <button 
-                        onClick={() => onShowToast && onShowToast("Viewing full consent audit log")}
-                        className="text-indigo-600 hover:text-indigo-800 font-bold text-[11px] cursor-pointer"
-                      >
-                        View All
-                      </button>
-                    </div>
-
-                    <div className="relative pl-5 space-y-3 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
-                      {selectedContact.consentHistory.map((item, idx) => (
-                        <div key={idx} className="relative space-y-0.5">
-                          <div className={`absolute -left-5 top-1 w-2.5 h-2.5 rounded-full border-2 bg-white ${
-                            item.type === "opt-in" ? 'border-emerald-500 bg-emerald-500' : 'border-red-500 bg-red-500'
-                          }`} />
-                          
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="font-extrabold text-slate-900">{item.title}</span>
-                            <span className="text-[10px] font-mono text-slate-400">{item.source}</span>
-                          </div>
-                          
-                          <div className="text-[10px] font-medium text-slate-400 font-mono">
-                            {item.time}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Drawer Panel Action Footer */}
-                  <div className="grid grid-cols-2 gap-2 pt-2">
-                    <button 
-                      onClick={() => setEditingChannel("email")}
-                      className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl cursor-pointer transition-colors"
-                    >
-                      Update Preferences
-                    </button>
-
-                    <button 
-                      onClick={() => onShowToast && onShowToast(`Opened full Customer 360 profile for ${selectedContact.name}`)}
-                      className="py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-1 cursor-pointer transition-all"
-                    >
-                      <span>View Full Profile</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                </div>
-              )}
-
-              {activePanelTab === "Details" && (
-                <div className="space-y-4 text-xs font-medium animate-in fade-in duration-150">
-                  <div className="bg-slate-50 p-4 rounded-xl space-y-2 border border-slate-200">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase">Contact ID</div>
-                    <div className="font-mono font-bold text-indigo-600">{selectedContact.id}</div>
-                    <div className="text-[10px] font-bold text-slate-400 uppercase pt-2">B2B Account</div>
-                    <div className="font-bold text-slate-900">{customer.name} ({customer.id})</div>
-                  </div>
-                </div>
-              )}
-
-              {activePanelTab === "Activity" && (
-                <div className="space-y-3 text-xs font-medium animate-in fade-in duration-150">
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div className="font-bold text-slate-900">Last Profile Activity</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">{selectedContact.lastActivity}</div>
-                  </div>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-12 text-slate-400 font-medium text-xs">
-              Select a contact from the table to view channel preferences.
-            </div>
-          )}
-
+        {/* Active Tags List */}
+        <div className="flex flex-wrap gap-2 pt-1">
+          {tags.map((t) => (
+            <span key={t} className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 flex items-center space-x-2 transition-all shadow-2xs">
+              <span>{t}</span>
+              <button 
+                onClick={() => handleRemoveTag(t)}
+                className="text-slate-400 hover:text-red-600 font-black cursor-pointer text-sm transition-colors"
+                title="Remove tag"
+              >
+                ×
+              </button>
+            </span>
+          ))}
         </div>
 
       </div>
+
+      {/* CARD 2: CONTACTS & CHANNEL PREFERENCES TABLE */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-4">
+        
+        <div className="border-b border-slate-100 pb-3">
+          <div className="flex items-center space-x-2">
+            <Users className="w-4 h-4 text-indigo-600" />
+            <h2 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+              CONTACTS & CHANNEL PREFERENCES
+            </h2>
+          </div>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">
+            View and manage communication preferences for contacts at this account. Click any contact row to inspect channel preferences.
+          </p>
+        </div>
+
+        {/* Search & Filter Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80">
+          
+          {/* Search */}
+          <div className="relative flex-1 w-full">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <input 
+              type="text"
+              placeholder="Search contacts by name, email, or role..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-9 pr-4 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          {/* Dropdown & Filter Button */}
+          <div className="flex items-center space-x-2 w-full sm:w-auto">
+            <select 
+              value={selectedRoleFilter}
+              onChange={(e) => setSelectedRoleFilter(e.target.value)}
+              className="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-700 focus:outline-none cursor-pointer"
+            >
+              <option value="All Contacts (8)">All Contacts (8)</option>
+              <option value="Executive">Executive Only</option>
+              <option value="Subscribed">Subscribed Only</option>
+            </select>
+
+            <button 
+              onClick={() => onShowToast && onShowToast("Filters applied")}
+              className="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-100 rounded-lg text-xs font-bold text-slate-700 flex items-center space-x-1.5 cursor-pointer shadow-2xs"
+            >
+              <Filter className="w-3.5 h-3.5 text-slate-500" />
+              <span>Filter</span>
+            </button>
+          </div>
+
+        </div>
+
+        {/* Contacts Table */}
+        <div className="overflow-x-auto border border-slate-200/90 rounded-xl">
+          <table className="w-full text-left text-xs">
+            <thead>
+              <tr className="bg-slate-50 text-slate-600 text-[10px] uppercase font-extrabold tracking-wider border-b border-slate-200">
+                <th className="py-3 px-3 w-8">
+                  <input type="checkbox" className="rounded text-indigo-600 focus:ring-indigo-500" />
+                </th>
+                <th className="py-3 px-3">CONTACT</th>
+                <th className="py-3 px-3">ROLE</th>
+                <th className="py-3 px-3">EMAIL</th>
+                <th className="py-3 px-3">WHATSAPP</th>
+                <th className="py-3 px-3">SMS</th>
+                <th className="py-3 px-3">LAST ACTIVITY</th>
+                <th className="py-3 px-3 text-right">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 font-medium text-slate-700 bg-white">
+              {filteredContacts.map((cnt) => {
+                const isSelected = selectedContact?.id === cnt.id;
+                return (
+                  <tr 
+                    key={cnt.id}
+                    onClick={() => setSelectedContact(cnt)}
+                    className={`transition-colors cursor-pointer ${
+                      isSelected ? 'bg-indigo-50/80 font-semibold' : 'hover:bg-slate-50/90'
+                    }`}
+                  >
+                    {/* Checkbox */}
+                    <td className="py-3.5 px-3">
+                      <input 
+                        type="checkbox" 
+                        checked={isSelected}
+                        onChange={() => setSelectedContact(cnt)}
+                        className="rounded text-indigo-600 focus:ring-indigo-500"
+                      />
+                    </td>
+
+                    {/* Contact Name & Email */}
+                    <td className="py-3.5 px-3">
+                      <div className="flex items-center space-x-2.5">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-xs shrink-0 ${cnt.initialsBg}`}>
+                          {cnt.initials}
+                        </div>
+                        <div>
+                          <div className="font-extrabold text-slate-900 text-xs">
+                            {cnt.name}
+                          </div>
+                          <div className="text-[11px] text-slate-400 font-mono">
+                            {cnt.email}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Role */}
+                    <td className="py-3.5 px-3">
+                      <span className="text-slate-600 font-bold text-[11px]">
+                        {cnt.role}
+                      </span>
+                    </td>
+
+                    {/* Email Badge */}
+                    <td className="py-3.5 px-3">
+                      {cnt.emailStatus === "Subscribed" ? (
+                        <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-md border border-emerald-200 inline-block">
+                          ✓ Subscribed
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 bg-slate-100 text-slate-500 font-semibold text-[10px] rounded-md border border-slate-200 inline-block">
+                          Not Set
+                        </span>
+                      )}
+                    </td>
+
+                    {/* WhatsApp Badge */}
+                    <td className="py-3.5 px-3">
+                      {cnt.whatsappStatus === "Subscribed" ? (
+                        <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-md border border-emerald-200 inline-block">
+                          ✓ Subscribed
+                        </span>
+                      ) : cnt.whatsappStatus === "Do Not Contact" ? (
+                        <span className="px-2.5 py-0.5 bg-red-100 text-red-800 font-extrabold text-[10px] rounded-md border border-red-200 inline-block">
+                          ⛔ Do Not Contact
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 bg-slate-100 text-slate-500 font-semibold text-[10px] rounded-md border border-slate-200 inline-block">
+                          Not Set
+                        </span>
+                      )}
+                    </td>
+
+                    {/* SMS Badge */}
+                    <td className="py-3.5 px-3">
+                      {cnt.smsStatus === "Subscribed" ? (
+                        <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 font-extrabold text-[10px] rounded-md border border-emerald-200 inline-block">
+                          ✓ Subscribed
+                        </span>
+                      ) : cnt.smsStatus === "Do Not Contact" ? (
+                        <span className="px-2.5 py-0.5 bg-red-100 text-red-800 font-extrabold text-[10px] rounded-md border border-red-200 inline-block">
+                          ⛔ Do Not Contact
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 bg-slate-100 text-slate-500 font-semibold text-[10px] rounded-md border border-slate-200 inline-block">
+                          Not Set
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Last Activity */}
+                    <td className="py-3.5 px-3 text-[11px] text-slate-500 font-medium">
+                      {cnt.lastActivity}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-3.5 px-3 text-right">
+                      <div className="flex items-center justify-end space-x-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedContact(cnt);
+                          }}
+                          className="px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-extrabold text-[11px] rounded-lg border border-indigo-200 cursor-pointer transition-colors"
+                        >
+                          Manage
+                        </button>
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onShowToast) onShowToast(`Contact options for ${cnt.name}`);
+                          }}
+                          className="p-1 text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
+                        >
+                          <MoreHorizontal className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Table Footer */}
+        <div className="flex items-center justify-between text-xs text-slate-500 font-medium pt-1">
+          <span>Showing 5 of 8 contacts</span>
+          
+          <div className="flex items-center space-x-1">
+            <button className="p-1 border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600 disabled:opacity-50">
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button className="px-3 py-1 bg-indigo-600 text-white font-bold rounded-lg text-xs">
+              1
+            </button>
+            <button className="px-3 py-1 hover:bg-slate-100 text-slate-700 font-bold rounded-lg text-xs">
+              2
+            </button>
+            <button className="p-1 border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-600">
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ==================================================
+          CONTACT PREFERENCES INSPECTOR SIDE PANEL (SLIDE-OVER DRAWER)
+          Appears when user clicks on a specific contact row in the table
+      ================================================== */}
+      {selectedContact && (
+        <div 
+          onClick={() => setSelectedContact(null)}
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex justify-end animate-in fade-in duration-200"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md bg-white min-h-screen shadow-2xl flex flex-col justify-between border-l border-slate-200 animate-in slide-in-from-right duration-200 p-6 space-y-5 overflow-y-auto"
+          >
+            
+            {/* Contact Profile Summary Header */}
+            <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center space-x-3">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-base shadow-2xs ${selectedContact.initialsBg}`}>
+                  {selectedContact.initials}
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+                    {selectedContact.name}
+                  </h3>
+                  <div className="text-xs text-slate-500 font-semibold">{selectedContact.role}</div>
+                  <div className="text-[11px] text-slate-400 font-mono mt-0.5">{selectedContact.email}</div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setSelectedContact(null)}
+                className="text-slate-400 hover:text-slate-700 p-1 rounded-lg cursor-pointer transition-colors"
+                title="Close panel"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Sub-Tabs: Preferences | Details | Activity */}
+            <div className="flex items-center border-b border-slate-200 text-xs font-bold">
+              <button
+                onClick={() => setActivePanelTab("Preferences")}
+                className={`pb-2.5 px-3 border-b-2 cursor-pointer transition-colors ${
+                  activePanelTab === "Preferences"
+                    ? 'border-indigo-600 text-indigo-600 font-extrabold'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                Preferences
+              </button>
+
+              <button
+                onClick={() => setActivePanelTab("Details")}
+                className={`pb-2.5 px-3 border-b-2 cursor-pointer transition-colors ${
+                  activePanelTab === "Details"
+                    ? 'border-indigo-600 text-indigo-600 font-extrabold'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                Details
+              </button>
+
+              <button
+                onClick={() => setActivePanelTab("Activity")}
+                className={`pb-2.5 px-3 border-b-2 cursor-pointer transition-colors ${
+                  activePanelTab === "Activity"
+                    ? 'border-indigo-600 text-indigo-600 font-extrabold'
+                    : 'border-transparent text-slate-500 hover:text-slate-900'
+                }`}
+              >
+                Activity
+              </button>
+            </div>
+
+            {activePanelTab === "Preferences" && (
+              <div className="space-y-5 animate-in fade-in duration-150 flex-1">
+                
+                {/* Channel Preferences Section */}
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+                      CHANNEL PREFERENCES
+                    </h4>
+                    <p className="text-[11px] text-slate-500 font-medium">
+                      Manage communication preferences and consent status for this contact.
+                    </p>
+                  </div>
+
+                  {/* Email Card */}
+                  <div 
+                    onClick={() => setEditingChannel("email")}
+                    className="p-3.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 rounded-xl space-y-2 cursor-pointer transition-all group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200 flex items-center justify-center">
+                          <Mail className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="font-extrabold text-slate-900 text-xs">Email</span>
+                      </div>
+
+                      <div className="flex items-center space-x-1.5">
+                        <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${
+                          selectedContact.preferences.email.status === "Subscribed" 
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                            : 'bg-slate-200 text-slate-700 border-slate-300'
+                        }`}>
+                          ✓ {selectedContact.preferences.email.status}
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 font-medium">
+                      {selectedContact.preferences.email.subtext}
+                    </p>
+
+                    <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-200/60">
+                      <span>{selectedContact.preferences.email.source}</span>
+                      <span>{selectedContact.preferences.email.updated}</span>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp Card */}
+                  <div 
+                    onClick={() => setEditingChannel("whatsapp")}
+                    className="p-3.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 rounded-xl space-y-2 cursor-pointer transition-all group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center">
+                          <MessageSquare className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="font-extrabold text-slate-900 text-xs">WhatsApp</span>
+                      </div>
+
+                      <div className="flex items-center space-x-1.5">
+                        <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${
+                          selectedContact.preferences.whatsapp.status === "Subscribed" 
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                            : selectedContact.preferences.whatsapp.status === "Do Not Contact"
+                            ? 'bg-red-100 text-red-800 border-red-200'
+                            : 'bg-slate-200 text-slate-700 border-slate-300'
+                        }`}>
+                          {selectedContact.preferences.whatsapp.status === "Subscribed" ? "✓ Subscribed" : selectedContact.preferences.whatsapp.status === "Do Not Contact" ? "⛔ Do Not Contact" : "Not Set"}
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 font-medium">
+                      {selectedContact.preferences.whatsapp.subtext}
+                    </p>
+
+                    <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-200/60">
+                      <span>{selectedContact.preferences.whatsapp.source}</span>
+                      <span>{selectedContact.preferences.whatsapp.updated}</span>
+                    </div>
+                  </div>
+
+                  {/* SMS Card */}
+                  <div 
+                    onClick={() => setEditingChannel("sms")}
+                    className="p-3.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200 rounded-xl space-y-2 cursor-pointer transition-all group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-7 h-7 rounded-lg bg-red-50 text-red-600 border border-red-200 flex items-center justify-center">
+                          <PhoneCall className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="font-extrabold text-slate-900 text-xs">SMS</span>
+                      </div>
+
+                      <div className="flex items-center space-x-1.5">
+                        <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${
+                          selectedContact.preferences.sms.status === "Subscribed" 
+                            ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
+                            : selectedContact.preferences.sms.status === "Do Not Contact"
+                            ? 'bg-red-100 text-red-800 border-red-200'
+                            : 'bg-slate-200 text-slate-700 border-slate-300'
+                        }`}>
+                          {selectedContact.preferences.sms.status === "Subscribed" ? "✓ Subscribed" : selectedContact.preferences.sms.status === "Do Not Contact" ? "⛔ Do Not Contact" : "Not Set"}
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition-colors" />
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-slate-600 font-medium">
+                      {selectedContact.preferences.sms.subtext}
+                    </p>
+
+                    <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-200/60">
+                      <span>{selectedContact.preferences.sms.source}</span>
+                      <span>{selectedContact.preferences.sms.updated}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Consent History Timeline Section */}
+                <div className="space-y-3 pt-2 border-t border-slate-100">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+                      CONSENT HISTORY
+                    </h4>
+                    <button 
+                      onClick={() => onShowToast && onShowToast("Viewing full consent audit log")}
+                      className="text-indigo-600 hover:text-indigo-800 font-bold text-[11px] cursor-pointer"
+                    >
+                      View All
+                    </button>
+                  </div>
+
+                  <div className="relative pl-5 space-y-3 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                    {selectedContact.consentHistory.map((item, idx) => (
+                      <div key={idx} className="relative space-y-0.5">
+                        <div className={`absolute -left-5 top-1 w-2.5 h-2.5 rounded-full border-2 bg-white ${
+                          item.type === "opt-in" ? 'border-emerald-500 bg-emerald-500' : 'border-red-500 bg-red-500'
+                        }`} />
+                        
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="font-extrabold text-slate-900">{item.title}</span>
+                          <span className="text-[10px] font-mono text-slate-400">{item.source}</span>
+                        </div>
+                        
+                        <div className="text-[10px] font-medium text-slate-400 font-mono">
+                          {item.time}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Drawer Panel Action Footer */}
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <button 
+                    onClick={() => setEditingChannel("email")}
+                    className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl cursor-pointer transition-colors"
+                  >
+                    Update Preferences
+                  </button>
+
+                  <button 
+                    onClick={() => onShowToast && onShowToast(`Opened full Customer 360 profile for ${selectedContact.name}`)}
+                    className="py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-1 cursor-pointer transition-all"
+                  >
+                    <span>View Full Profile</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+            {activePanelTab === "Details" && (
+              <div className="space-y-4 text-xs font-medium animate-in fade-in duration-150 flex-1">
+                <div className="bg-slate-50 p-4 rounded-xl space-y-2 border border-slate-200">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Contact ID</div>
+                  <div className="font-mono font-bold text-indigo-600">{selectedContact.id}</div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase pt-2">B2B Account</div>
+                  <div className="font-bold text-slate-900">{customer.name} ({customer.id})</div>
+                </div>
+              </div>
+            )}
+
+            {activePanelTab === "Activity" && (
+              <div className="space-y-3 text-xs font-medium animate-in fade-in duration-150 flex-1">
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                  <div className="font-bold text-slate-900">Last Profile Activity</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">{selectedContact.lastActivity}</div>
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
 
       {/* ==================================================
           EDIT CHANNEL PREFERENCE MODAL
