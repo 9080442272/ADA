@@ -177,63 +177,23 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* CHECK IF USER IS IN ACCOUNT 360 VS GLOBAL CDP VS PEOPLE DIRECTORY */}
-          {activeSubTab === "People" ? null : ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? (
-            /* ACCOUNT 360 HEADER & TABS (Answers "WHO IS THIS ACCOUNT?") */
-            <div className="px-6 pt-4">
+          {/* UNIFIED CUSTOMER 360 TAB STRIP (EVERY CAPABILITY IN ONE TAB BAR) */}
+          <CustomerTabs 
+            activeTab={activeSubTab} 
+            onSelectTab={(tab) => {
+              setActiveTab(tab);
+              setActiveSubTab(tab);
+            }} 
+          />
+
+          {/* IF USER IS VIEWING SINGLE ACCOUNT 360 PROFILE (TechGear Europe) */}
+          {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
+            <div className="px-6 pt-4 max-w-7xl mx-auto w-full">
               <CustomerHeader 
                 customer={customer}
                 onStartConversation={() => setIsStartChatOpen(true)}
                 onActionSelect={handleHeaderActionSelect}
               />
-
-              {/* TABS DIRECTLY BELOW HEADER */}
-              <CustomerTabs 
-                activeTab={activeTab} 
-                onSelectTab={(tab) => {
-                  setActiveTab(tab);
-                  setActiveSubTab(tab);
-                }} 
-              />
-            </div>
-          ) : (
-            /* GLOBAL PLATFORM-LEVEL CDP HEADER */
-            <div className="bg-white border-b border-slate-200 px-8 py-5 shadow-2xs">
-              <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <div className="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider flex items-center space-x-1">
-                    <span>CDP Platform Capability</span>
-                    <span>•</span>
-                    <span className="text-slate-400 font-normal">Global View</span>
-                  </div>
-                  <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                    {activeSubTab === "Segments" && "Audience Segments & Targeting"}
-                    {activeSubTab === "Events" && "Real-Time Telemetry & Event Ingestion"}
-                    {activeSubTab === "Tags & DNC" && "Global Taxonomy, Tags & Do-Not-Contact Rules"}
-                    {activeSubTab === "Duplicates" && "Identity Resolution & Profile Merging"}
-                    {activeSubTab === "Data Sources" && "Data Pipeline Connections & SDK Telemetry"}
-                    {activeSubTab === "Compliance & GDPR" && "Data Privacy, GDPR & Governance Control"}
-                  </h1>
-                  <p className="text-xs text-slate-500">
-                    {activeSubTab === "Segments" && "Manage customer segment definitions, rule builders, and activation destinations."}
-                    {activeSubTab === "Events" && "Live event ingestion log from web SDKs, APIs, and ecommerce platform webhooks."}
-                    {activeSubTab === "Tags & DNC" && "Global account tags, suppression lists, and do-not-contact compliance policies."}
-                    {activeSubTab === "Duplicates" && "AI-detected duplicate account matches and identity merging queue."}
-                    {activeSubTab === "Data Sources" && "Manage real-time integrations, API keys, Web SDKs, and ingestion health."}
-                    {activeSubTab === "Compliance & GDPR" && "Global consent management, data erasure requests, and privacy audit log."}
-                  </p>
-                </div>
-
-                <button 
-                  onClick={() => {
-                    setActiveTab("Overview");
-                    setActiveSubTab("Overview");
-                  }}
-                  className="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 shrink-0 cursor-pointer shadow-2xs"
-                >
-                  <span>View TechGear Europe (Account 360)</span>
-                </button>
-              </div>
             </div>
           )}
 

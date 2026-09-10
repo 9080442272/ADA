@@ -79,91 +79,32 @@ export default function Sidebar({ activeSubTab = "Overview", onSelectSubTab }) {
           </button>
         </div>
 
-        {/* SECTION 2: CUSTOMER 360 (Global Directory & Account Detail) */}
-        <div className="pt-2 space-y-1">
+        {/* SECTION 2: UNIFIED CUSTOMER 360 ENTRY */}
+        <div className="pt-2">
           <div className="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
             <span>Customer 360</span>
             <span className="text-[9px] font-normal text-slate-400">CAIP</span>
           </div>
 
-          {/* 1. Global People Directory */}
           <button 
             onClick={() => onSelectSubTab && onSelectSubTab("People")}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-xs font-bold text-left transition-all cursor-pointer ${
-              activeSubTab === "People"
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-xs'
+            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-xs font-bold text-left transition-all cursor-pointer ${
+              ["People", "Overview", "Interactions", "Commercial & Usage", "Attributes", "Segments", "Events", "Tags & DNC", "Duplicates", "Data Sources", "Compliance & GDPR"].includes(activeSubTab)
+                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
                 : 'bg-slate-800/60 text-slate-300 hover:text-white hover:bg-slate-800 border-slate-700/60'
             }`}
           >
             <div className="flex items-center space-x-2.5 truncate">
-              <Users className={`w-4 h-4 ${activeSubTab === "People" ? 'text-white' : 'text-indigo-400'}`} />
-              <span className="truncate">People</span>
-            </div>
-            <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
-              activeSubTab === "People" ? 'bg-indigo-700 text-indigo-100' : 'bg-slate-800 text-slate-400'
-            }`}>
-              125.4k
-            </span>
-          </button>
-
-          {/* 2. Specific Customer Detail (TechGear Europe) */}
-          <button 
-            onClick={() => onSelectSubTab && onSelectSubTab("Overview")}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-xs font-semibold text-left transition-all cursor-pointer ${
-              ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab)
-                ? 'bg-indigo-600/90 text-white border-indigo-500/80 shadow-xs'
-                : 'bg-slate-800/30 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border-slate-800/80'
-            }`}
-          >
-            <div className="flex items-center space-x-2.5 truncate">
-              <Building2 className={`w-3.5 h-3.5 ${["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? 'text-white' : 'text-slate-500'}`} />
+              <Users className="w-4 h-4 text-white" />
               <div className="truncate">
-                <div className="text-xs font-bold leading-tight truncate">TechGear Europe</div>
-                <div className="text-[10px] font-mono opacity-70 truncate">ACC-89420-EU</div>
+                <div className="text-xs font-extrabold leading-tight">Customer 360</div>
+                <div className="text-[10px] font-normal opacity-80 truncate">125.4k Unified Profiles</div>
               </div>
             </div>
-            <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
-              360
+            <span className="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-indigo-700 text-indigo-100">
+              CAIP
             </span>
           </button>
-        </div>
-
-        {/* SECTION 3: CDP PLATFORM CAPABILITIES */}
-        <div className="pt-3">
-          <div className="px-3 pb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
-            <span>CDP Capabilities</span>
-            <span className="text-[9px] font-normal text-slate-400">Platform</span>
-          </div>
-
-          <div className="space-y-0.5">
-            {cdpItems.map((item) => {
-              const ItemIcon = item.icon;
-              const isActive = activeSubTab === item.label;
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => onSelectSubTab && onSelectSubTab(item.label)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-all text-left cursor-pointer ${
-                    isActive 
-                      ? 'bg-indigo-600 text-white font-bold shadow-xs' 
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                  }`}
-                >
-                  <div className="flex items-center space-x-2.5 truncate">
-                    <ItemIcon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-500'}`} />
-                    <span className="truncate">{item.label}</span>
-                  </div>
-                  {item.count && (
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded font-medium ${
-                      isActive ? 'bg-indigo-700 text-indigo-100' : 'text-slate-500 bg-slate-800'
-                    }`}>
-                      {item.count}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
         </div>
 
         {/* SECTION 4: Engagement & Channels */}
