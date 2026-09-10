@@ -182,34 +182,34 @@ export default function PeopleView({ customer, onSelectCustomer, onShowToast }) 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="text-xs text-slate-500 font-medium flex items-center space-x-1.5">
-            <span className="hover:text-slate-800 cursor-pointer">Customer 360</span>
+            <span className="hover:text-slate-800 cursor-pointer">Account 360</span>
             <span>›</span>
-            <span className="text-slate-900 font-bold">People</span>
+            <span className="text-slate-900 font-bold">Accounts Directory</span>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight mt-1">
-            People
+            Accounts Directory
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            View and manage all your customers in one place. Unify data, understand behavior, and take action across CAIP.
+            View and manage all B2B customer accounts in one place. Unify company data, understand behavior, and trigger ADA AI actions.
           </p>
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center space-x-2.5 shrink-0">
           <button 
-            onClick={() => onShowToast && onShowToast("Opened customer CSV import wizard!")}
+            onClick={() => onShowToast && onShowToast("Opened accounts CSV import wizard!")}
             className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-extrabold text-xs rounded-xl border border-slate-300 shadow-2xs flex items-center space-x-1.5 cursor-pointer transition-all"
           >
             <Upload className="w-3.5 h-3.5 text-slate-500" />
-            <span>Import customers</span>
+            <span>Import accounts</span>
           </button>
 
           <button 
-            onClick={() => onShowToast && onShowToast("Opened Add New Customer dialog!")}
+            onClick={() => onShowToast && onShowToast("Opened Add New Account dialog!")}
             className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs rounded-xl shadow-sm flex items-center space-x-1.5 cursor-pointer transition-all"
           >
             <Plus className="w-4 h-4 text-white" />
-            <span>Add customer</span>
+            <span>Add account</span>
           </button>
         </div>
       </div>
@@ -221,11 +221,11 @@ export default function PeopleView({ customer, onSelectCustomer, onShowToast }) 
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700">
-              <Users className="w-5 h-5" />
+              <Building2 className="w-5 h-5 text-indigo-600" />
             </div>
             <div>
-              <div className="text-2xl font-extrabold text-slate-900 tracking-tight">125,482</div>
-              <div className="text-xs font-semibold text-slate-500">Total customers</div>
+              <div className="text-2xl font-extrabold text-slate-900 tracking-tight">8,420</div>
+              <div className="text-xs font-semibold text-slate-500">Total B2B Accounts</div>
             </div>
           </div>
         </div>

@@ -126,25 +126,71 @@ export default function DuplicatesView({ customer, onShowToast }) {
         </div>
       </div>
 
-      {/* MERGE CONFIRMATION MODAL */}
+      {/* MERGE CONFIRMATION MODAL WITH FIELD-LEVEL RESOLUTION PREVIEW */}
       {isMergeModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-4 text-xs animate-in zoom-in-95 duration-150">
+          <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 p-6 space-y-4 text-xs animate-in zoom-in-95 duration-150">
             <div className="flex items-center space-x-2 text-indigo-600 font-bold border-b border-slate-100 pb-3">
               <Merge className="w-5 h-5" />
-              <h3 className="text-base font-extrabold text-slate-900">Confirm Account Profile Merge</h3>
+              <h3 className="text-base font-extrabold text-slate-900">Field-Level Resolution Preview</h3>
             </div>
 
-            <p className="text-slate-700 font-medium leading-relaxed">
-              Merging will combine all historical interaction timelines, attributes, and email events from <strong>TechGear Europe GmbH</strong> into primary profile <strong>TechGear Europe (ACC-89420-EU)</strong>.
+            <p className="text-slate-600 font-medium leading-relaxed">
+              Reviewing field-level resolution before merging <strong>TechGear Europe GmbH (ACC-99104-DE)</strong> into primary account <strong>TechGear Europe (ACC-89420-EU)</strong>:
             </p>
+
+            {/* Field-level resolution table */}
+            <div className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200">
+              <table className="w-full text-left text-[11px]">
+                <thead>
+                  <tr className="bg-slate-900 text-slate-300 text-[10px] uppercase font-extrabold">
+                    <th className="py-2 px-3">Field</th>
+                    <th className="py-2 px-3">Primary</th>
+                    <th className="py-2 px-3">Duplicate</th>
+                    <th className="py-2 px-3">Final Merged</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 font-medium text-slate-700 bg-white">
+                  <tr>
+                    <td className="py-2 px-3 font-bold text-slate-900">Company Name</td>
+                    <td className="py-2 px-3">TechGear Europe</td>
+                    <td className="py-2 px-3 text-slate-400">TechGear Europe GmbH</td>
+                    <td className="py-2 px-3 font-bold text-indigo-700">TechGear Europe</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 font-bold text-slate-900">Domain</td>
+                    <td className="py-2 px-3 font-mono">techgear.fr</td>
+                    <td className="py-2 px-3 font-mono text-slate-400">techgear.de</td>
+                    <td className="py-2 px-3 font-bold text-indigo-700 font-mono">techgear.fr</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 font-bold text-slate-900">Location</td>
+                    <td className="py-2 px-3">Paris, France</td>
+                    <td className="py-2 px-3 text-slate-400">Munich, Germany</td>
+                    <td className="py-2 px-3 font-bold text-indigo-700">Paris, France</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 font-bold text-slate-900">Contact</td>
+                    <td className="py-2 px-3">Antoine Laurent</td>
+                    <td className="py-2 px-3 text-slate-400">Antoine Laurent</td>
+                    <td className="py-2 px-3 font-bold text-indigo-700">Antoine Laurent</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 font-bold text-slate-900">LTV / ARR</td>
+                    <td className="py-2 px-3 font-bold text-emerald-700">€84,500</td>
+                    <td className="py-2 px-3 text-slate-400">€0</td>
+                    <td className="py-2 px-3 font-bold text-emerald-700">€84,500</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
             <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-950 font-semibold space-y-1">
               <div className="font-extrabold flex items-center space-x-1">
                 <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                <span>Destructive Action Warning</span>
+                <span>Identity Resolution Note</span>
               </div>
-              <p className="text-[11px]">This merge operation cannot be undone. Secondary account ACC-99104-DE will be archived.</p>
+              <p className="text-[11px]">Merging will combine all historical interaction timelines, event logs, and contact preferences into primary profile ACC-89420-EU.</p>
             </div>
 
             <div className="pt-2 flex items-center justify-end space-x-2">
