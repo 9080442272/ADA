@@ -37,7 +37,8 @@ import {
   ShoppingBag,
   Mail,
   ListFilter,
-  Trash2
+  Trash2,
+  Check
 } from 'lucide-react';
 
 export default function EventsView({ 
@@ -56,6 +57,7 @@ export default function EventsView({
   const [selectedCategory, setSelectedCategory] = useState("ALL");
   const [isLiveStreaming, setIsLiveStreaming] = useState(true);
   const [selectedEventForDrawer, setSelectedEventForDrawer] = useState(null);
+  const [selectedSourceForDrawer, setSelectedSourceForDrawer] = useState(null);
 
   // 1. EVENT DEFINITIONS CATALOG STATE (allows dynamic addition via "+ Create Event")
   const [eventDefinitionsList, setEventDefinitionsList] = useState([
@@ -64,6 +66,8 @@ export default function EventsView({
       title: "Viewed myPricing Page",
       eventKey: "pricing_page_viewed",
       category: "Web & Product",
+      status: "Active",
+      schemaValid: true,
       description: "Triggered when an identified account/contact views the myPricing product page.",
       propertiesSchema: [
         { name: "page_url", type: "String", required: true, example: "/products/mypricing" },
@@ -82,6 +86,8 @@ export default function EventsView({
       title: "Downloaded Dynamic Pricing Playbook",
       eventKey: "playbook_downloaded",
       category: "Content & Lead Gen",
+      status: "Active",
+      schemaValid: true,
       description: "Triggered when a contact submits a form or downloads the B2B pricing whitepaper.",
       propertiesSchema: [
         { name: "asset_id", type: "String", required: true, example: "playbook-pricing-v4.pdf" },
@@ -99,6 +105,8 @@ export default function EventsView({
       title: "Attended Competitive Pricing Webinar",
       eventKey: "webinar_attended",
       category: "Events & Webinars",
+      status: "Active",
+      schemaValid: true,
       description: "Triggered when a contact attends 15+ minutes of a live product or strategy webinar.",
       propertiesSchema: [
         { name: "webinar_id", type: "String", required: true, example: "WEB-99102" },
@@ -116,6 +124,8 @@ export default function EventsView({
       title: "ROI Calculator Calculation",
       eventKey: "roi_calculated",
       category: "Interactive Tools",
+      status: "Active",
+      schemaValid: true,
       description: "Triggered when a prospect calculates estimated annual margin savings on the ROI tool.",
       propertiesSchema: [
         { name: "calculated_savings", type: "Number", required: true, example: "14200" },
@@ -133,6 +143,8 @@ export default function EventsView({
       title: "Shopify Integration Auth",
       eventKey: "shopify_auth_completed",
       category: "Product & API Integration",
+      status: "Active",
+      schemaValid: true,
       description: "Triggered when a merchant connects their Shopify store OAuth credentials.",
       propertiesSchema: [
         { name: "shop_domain", type: "String", required: true, example: "apex-de.myshopify.com" },
@@ -150,6 +162,8 @@ export default function EventsView({
       title: "Opened Pricing Strategy Email",
       eventKey: "email_campaign_opened",
       category: "Outbound Marketing",
+      status: "Active",
+      schemaValid: true,
       description: "Triggered when a contact opens an outbound marketing or strategy email campaign.",
       propertiesSchema: [
         { name: "campaign_title", type: "String", required: true, example: "Q4 Pricing Alert" },
@@ -204,6 +218,8 @@ export default function EventsView({
       title: newEventTitle,
       eventKey: generatedKey,
       category: newEventCategory,
+      status: "Active",
+      schemaValid: true,
       description: newEventDescription || `Triggered when an identified account/contact performs ${newEventTitle}.`,
       propertiesSchema: newEventProperties.filter(p => p.name.trim() !== ""),
       identityMapping: "Contact → Account",
@@ -408,7 +424,7 @@ export default function EventsView({
     }
   ];
 
-  // 3. TRACKING SOURCES DATA (Lightweight contextual view connected to Data Sources)
+  // 3. STANDARDIZED TRACKING SOURCES DATA
   const trackingSourcesList = [
     {
       id: "src-1",
@@ -416,11 +432,14 @@ export default function EventsView({
       type: "Web Telemetry",
       status: "Connected",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      eventVolume: "412,000 events / mo",
+      eventTypesCount: 12,
+      volume24h: "13,420 / 24h",
       lastReceived: "2 min ago",
-      eventsTrackedCount: 12,
-      trackedEvents: ["Viewed myPricing Page", "Clicked Pricing CTA", "Form Interaction"],
-      description: "Captures web client behavior, pageviews, and click interactions."
+      trackedEvents: ["Viewed myPricing Page", "Clicked Pricing CTA", "Form Interaction", "Product View"],
+      description: "Captures web client behavior, pageviews, and click interactions.",
+      schemaValidation: "99.8%",
+      identityResolution: "97.2%",
+      lastError: "None"
     },
     {
       id: "src-2",
@@ -428,11 +447,14 @@ export default function EventsView({
       type: "First-Party SDK",
       status: "Live",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      eventVolume: "890,000 events / mo",
+      eventTypesCount: 18,
+      volume24h: "41,280 / 24h",
       lastReceived: "Just now",
-      eventsTrackedCount: 18,
-      trackedEvents: ["ROI Calculator Calculation", "Repricing Rule Created"],
-      description: "Embedded JavaScript SDK feeding product usage telemetry directly to ADA."
+      trackedEvents: ["ROI Calculator Calculation", "Repricing Rule Created", "Margin Audit Triggered"],
+      description: "Embedded JavaScript SDK feeding product usage telemetry directly to ADA.",
+      schemaValidation: "100.0%",
+      identityResolution: "98.9%",
+      lastError: "None"
     },
     {
       id: "src-3",
@@ -440,11 +462,14 @@ export default function EventsView({
       type: "CRM & Inbound",
       status: "Connected",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      eventVolume: "145,000 events / mo",
+      eventTypesCount: 8,
+      volume24h: "8,920 / 24h",
       lastReceived: "14 min ago",
-      eventsTrackedCount: 8,
-      trackedEvents: ["Downloaded Dynamic Pricing Playbook", "Form Submitted"],
-      description: "Syncs inbound lead form submissions and content downloads."
+      trackedEvents: ["Downloaded Dynamic Pricing Playbook", "Form Submitted", "Sales Email Activity"],
+      description: "Syncs inbound lead form submissions and content downloads.",
+      schemaValidation: "98.5%",
+      identityResolution: "94.1%",
+      lastError: "None"
     },
     {
       id: "src-4",
@@ -452,11 +477,14 @@ export default function EventsView({
       type: "Server Integration",
       status: "Connected",
       statusBadge: "bg-emerald-100 text-emerald-800 border-emerald-200",
-      eventVolume: "220,000 events / mo",
+      eventTypesCount: 15,
+      volume24h: "22,104 / 24h",
       lastReceived: "5 min ago",
-      eventsTrackedCount: 15,
-      trackedEvents: ["Shopify Integration Auth", "Amazon Seller API Sync"],
-      description: "Inbound REST webhook pipeline receiving API authentication events."
+      trackedEvents: ["Shopify Integration Auth", "Amazon Seller API Sync", "Billing Subscription Update"],
+      description: "Inbound REST webhook pipeline receiving marketplace API authentication events.",
+      schemaValidation: "99.2%",
+      identityResolution: "95.8%",
+      lastError: "None"
     }
   ];
 
@@ -495,33 +523,35 @@ export default function EventsView({
                 </span>
               </div>
               <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                Track customer behavior and turn it into actionable audience signals.
+                {activeTab === "sources" 
+                  ? "Monitor the sources sending behavioral events into ADA and quickly identify tracking issues."
+                  : "Track customer behavior and turn it into actionable audience signals."}
               </p>
             </div>
           </div>
 
-          {/* Header Action Buttons */}
+          {/* Header Action Button (Contextual per tab) */}
           <div className="flex items-center space-x-2 shrink-0">
-            {/* Secondary Action: Tracking Setup */}
-            <button 
-              onClick={() => {
-                setActiveTab("sources");
-                if (onShowToast) onShowToast("Opened Tracking Sources management view");
-              }}
-              className="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs rounded-xl border border-slate-300 flex items-center space-x-1.5 transition-colors cursor-pointer"
-            >
-              <Settings className="w-3.5 h-3.5 text-slate-500" />
-              <span>Tracking Setup</span>
-            </button>
-
-            {/* Primary Action: + Create Event */}
-            <button 
-              onClick={() => setIsCreateModalOpen(true)}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Create Event</span>
-            </button>
+            {activeTab === "sources" ? (
+              <button 
+                onClick={() => {
+                  if (onNavigateToDataSources) onNavigateToDataSources();
+                  if (onShowToast) onShowToast("Navigating to Data Sources connector wizard...");
+                }}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Connect Source</span>
+              </button>
+            ) : (
+              <button 
+                onClick={() => setIsCreateModalOpen(true)}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 transition-all cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Create Event</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -804,9 +834,17 @@ export default function EventsView({
                       {def.eventKey}
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 text-[10px] font-extrabold bg-emerald-100 text-emerald-800 rounded-md border border-emerald-200">
-                    {def.monthlyVolume}
-                  </span>
+
+                  {/* Status & Volume Tags */}
+                  <div className="flex flex-col items-end space-y-1">
+                    <span className="px-2.5 py-0.5 text-[10px] font-extrabold bg-emerald-100 text-emerald-800 rounded-md border border-emerald-200 flex items-center space-x-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                      <span>{def.status}</span>
+                    </span>
+                    <span className="text-[10px] font-mono text-slate-500 font-bold">
+                      {def.monthlyVolume}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Description */}
@@ -816,8 +854,12 @@ export default function EventsView({
 
                 {/* Schema / Properties Table */}
                 <div className="space-y-1.5">
-                  <div className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                    Expected Properties & Data Types
+                  <div className="flex items-center justify-between text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+                    <span>Expected Properties & Data Types</span>
+                    <span className="text-emerald-600 flex items-center space-x-1">
+                      <Check className="w-3 h-3" />
+                      <span>Schema Validated</span>
+                    </span>
                   </div>
                   <div className="bg-white border border-slate-200 rounded-lg overflow-hidden text-[11px]">
                     {def.propertiesSchema.map((prop, idx) => (
@@ -890,70 +932,74 @@ export default function EventsView({
       )}
 
       {/* ==================================================
-          4. TAB 3: TRACKING SOURCES (Lightweight view connected to Data Sources)
+          4. TAB 3: TRACKING SOURCES (Contextual view connected to Data Sources)
       ================================================== */}
       {activeTab === "sources" && (
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-6 space-y-6 animate-in fade-in duration-150">
           
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div>
-              <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
-                Tracking Sources Health
-              </h2>
-              <p className="text-xs font-medium text-slate-500 mt-0.5">
-                Lightweight operational health for active event telemetry sources feeding ADA Events.
+          {/* Header Banner Connecting to Global Data Sources */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 text-white p-4 rounded-xl shadow-xs border border-slate-800">
+            <div className="space-y-1">
+              <div className="flex items-center space-x-2">
+                <Database className="w-4 h-4 text-indigo-400" />
+                <span className="font-extrabold text-sm text-white">CDP Behavioral Sources Registry</span>
+              </div>
+              <p className="text-xs text-slate-300 font-medium">
+                Tracking Sources displays event-producing channels. To manage CRM connectors, API credentials, or database syncs, visit global Data Sources.
               </p>
             </div>
 
-            {/* CTA Button navigating to main Data Sources module */}
             <button 
               onClick={() => {
                 if (onNavigateToDataSources) onNavigateToDataSources();
                 if (onShowToast) onShowToast("Navigated to global Data Sources module");
               }}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 cursor-pointer transition-all shrink-0"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center space-x-1.5 cursor-pointer transition-all shrink-0"
             >
               <span>Manage in Data Sources</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Contextual Tracking Sources Table */}
+          {/* Standardized Tracking Sources Table */}
           <div className="overflow-x-auto border border-slate-200/90 rounded-xl">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="bg-slate-900 text-slate-300 text-[10px] uppercase font-extrabold tracking-wider border-b border-slate-800">
-                  <th className="py-3 px-4">Tracking Source</th>
-                  <th className="py-3 px-4">Source Type</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4 text-right">Events Tracked</th>
-                  <th className="py-3 px-4">Last Received</th>
-                  <th className="py-3 px-4 text-right">Action</th>
+                  <th className="py-3.5 px-4">Tracking Source</th>
+                  <th className="py-3.5 px-4">Source Type</th>
+                  <th className="py-3.5 px-4">Status</th>
+                  <th className="py-3.5 px-4 text-right">Event Types</th>
+                  <th className="py-3.5 px-4 text-right">Volume / 24h</th>
+                  <th className="py-3.5 px-4">Last Received</th>
+                  <th className="py-3.5 px-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 font-medium text-slate-700 bg-white">
                 {trackingSourcesList.map((src) => (
-                  <tr key={src.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3 px-4 font-extrabold text-slate-900 flex items-center space-x-2">
-                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                      <span>{src.name}</span>
+                  <tr key={src.id} className="hover:bg-slate-50/90 transition-colors group cursor-pointer" onClick={() => setSelectedSourceForDrawer(src)}>
+                    <td className="py-3.5 px-4 font-extrabold text-slate-900 flex items-center space-x-2">
+                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                      <span className="group-hover:text-indigo-600 transition-colors">{src.name}</span>
                     </td>
-                    <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">{src.type}</td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 text-[10px] font-extrabold rounded ${src.statusBadge}`}>
+                    <td className="py-3.5 px-4 text-slate-500 font-mono text-[11px]">{src.type}</td>
+                    <td className="py-3.5 px-4">
+                      <span className={`px-2.5 py-0.5 text-[10px] font-extrabold rounded-md border ${src.statusBadge}`}>
                         ✓ {src.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right font-extrabold text-slate-900">{src.eventsTrackedCount} events</td>
-                    <td className="py-3 px-4 text-emerald-600 font-bold">{src.lastReceived}</td>
-                    <td className="py-3 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right font-extrabold text-slate-900">{src.eventTypesCount} types</td>
+                    <td className="py-3.5 px-4 text-right font-mono font-bold text-slate-900">{src.volume24h}</td>
+                    <td className="py-3.5 px-4 text-emerald-600 font-bold">{src.lastReceived}</td>
+                    <td className="py-3.5 px-4 text-right">
                       <button
-                        onClick={() => {
-                          if (onNavigateToDataSources) onNavigateToDataSources();
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedSourceForDrawer(src);
                         }}
-                        className="text-indigo-600 hover:text-indigo-800 font-extrabold text-xs inline-flex items-center space-x-1 cursor-pointer"
+                        className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-[11px] rounded-md border border-slate-300 inline-flex items-center space-x-1 cursor-pointer transition-all"
                       >
-                        <span>Manage sources</span>
+                        <span>Configure</span>
                         <ChevronRight className="w-3.5 h-3.5" />
                       </button>
                     </td>
@@ -963,30 +1009,74 @@ export default function EventsView({
             </table>
           </div>
 
-          {/* Sub-Card Grid for Source Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-            {trackingSourcesList.map((src) => (
-              <div key={src.id} className="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-2">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-extrabold text-slate-900 text-sm">{src.name}</h4>
-                  <span className="text-[11px] font-mono text-slate-500">{src.eventVolume}</span>
-                </div>
-                <p className="text-xs text-slate-600 font-medium">
-                  {src.description}
+          {/* Operational "Tracking Health" Section */}
+          <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 space-y-5">
+            <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+              <div>
+                <h3 className="text-base font-extrabold text-slate-900 tracking-tight">
+                  Tracking Health & Pipeline Operational Status
+                </h3>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">
+                  Real-time quality metrics for event delivery, schema validation, and identity resolution.
                 </p>
-                <div className="pt-2 flex items-center justify-between border-t border-slate-200/60 text-[11px]">
-                  <span className="text-slate-400 font-medium">Sample Events: {src.trackedEvents.join(", ")}</span>
-                  <button 
-                    onClick={() => {
-                      if (onNavigateToDataSources) onNavigateToDataSources();
-                    }}
-                    className="text-indigo-600 font-bold hover:underline cursor-pointer"
-                  >
-                    Configure →
-                  </button>
+              </div>
+
+              <span className="px-2.5 py-1 text-xs font-extrabold bg-emerald-100 text-emerald-800 rounded-md border border-emerald-200 flex items-center space-x-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>All Pipelines Operational</span>
+              </span>
+            </div>
+
+            {/* 3 Operational Progress Bar Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-1">
+              
+              {/* Event Delivery */}
+              <div className="bg-white p-4 rounded-xl border border-slate-200/90 space-y-2 shadow-2xs">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-extrabold text-slate-800">Event Delivery SLA</span>
+                  <span className="font-black text-emerald-600">98.7%</span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full" style={{ width: '98.7%' }} />
+                </div>
+                <div className="text-[11px] text-slate-500 font-medium flex justify-between">
+                  <span>Sub-second delivery</span>
+                  <span className="text-slate-400 font-mono">0 dropouts</span>
                 </div>
               </div>
-            ))}
+
+              {/* Identity Resolution */}
+              <div className="bg-white p-4 rounded-xl border border-slate-200/90 space-y-2 shadow-2xs">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-extrabold text-slate-800">Identity Resolution</span>
+                  <span className="font-black text-indigo-600">96.2%</span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-indigo-600 rounded-full" style={{ width: '96.2%' }} />
+                </div>
+                <div className="text-[11px] text-slate-500 font-medium flex justify-between">
+                  <span>Contact → Account Graph</span>
+                  <span className="text-slate-400 font-mono">125.4k profiles</span>
+                </div>
+              </div>
+
+              {/* Schema Validation */}
+              <div className="bg-white p-4 rounded-xl border border-slate-200/90 space-y-2 shadow-2xs">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-extrabold text-slate-800">Events with Valid Schema</span>
+                  <span className="font-black text-purple-600">99.1%</span>
+                </div>
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full bg-purple-600 rounded-full" style={{ width: '99.1%' }} />
+                </div>
+                <div className="text-[11px] text-slate-500 font-medium flex justify-between">
+                  <span>Type compliance</span>
+                  <span className="text-slate-400 font-mono">0 schema errors</span>
+                </div>
+              </div>
+
+            </div>
+
           </div>
 
         </div>
@@ -1210,7 +1300,115 @@ export default function EventsView({
       )}
 
       {/* ==================================================
-          6. MODAL: "+ CREATE EVENT DEFINITION" WORKFLOW
+          6. CONTEXTUAL SOURCE INSPECTOR DRAWER
+      ================================================== */}
+      {selectedSourceForDrawer && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex justify-end animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-white min-h-screen shadow-2xl flex flex-col justify-between border-l border-slate-200 animate-in slide-in-from-right duration-200">
+            
+            {/* Header */}
+            <div className="p-6 border-b border-slate-200 bg-slate-900 text-white space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 bg-indigo-500/30 text-indigo-300 text-xs font-extrabold rounded border border-indigo-400/30">
+                  TRACKING SOURCE INSPECTOR
+                </span>
+                <button 
+                  onClick={() => setSelectedSourceForDrawer(null)}
+                  className="text-slate-400 hover:text-white p-1 rounded-lg cursor-pointer transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <h2 className="text-xl font-black text-white">
+                {selectedSourceForDrawer.name}
+              </h2>
+
+              <div className="text-xs text-slate-400 flex items-center space-x-3 font-mono">
+                <span>{selectedSourceForDrawer.type}</span>
+                <span>•</span>
+                <span className="text-emerald-400 font-bold">✓ {selectedSourceForDrawer.status}</span>
+                <span>•</span>
+                <span>Last: {selectedSourceForDrawer.lastReceived}</span>
+              </div>
+            </div>
+
+            {/* Content Body */}
+            <div className="p-6 flex-1 overflow-y-auto space-y-6 text-xs">
+              
+              {/* Operational Metrics */}
+              <div className="grid grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Event Types</div>
+                  <div className="text-lg font-black text-slate-900 mt-0.5">{selectedSourceForDrawer.eventTypesCount} types</div>
+                </div>
+                <div>
+                  <div className="text-[10px] font-bold text-slate-400 uppercase">Volume / 24h</div>
+                  <div className="text-lg font-black text-emerald-600 mt-0.5">{selectedSourceForDrawer.volume24h}</div>
+                </div>
+              </div>
+
+              {/* Tracked Event Types */}
+              <div className="space-y-2">
+                <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+                  Active Tracked Event Types
+                </div>
+                <div className="space-y-1.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                  {selectedSourceForDrawer.trackedEvents.map((evtName, i) => (
+                    <div key={i} className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200/80 font-bold text-slate-900">
+                      <span className="flex items-center space-x-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <span>{evtName}</span>
+                      </span>
+                      <span className="text-[10px] font-mono text-slate-400">Ingesting</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Health Specs */}
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+                <div className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider">
+                  Operational Health Metrics
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200/80">
+                    <span className="text-slate-600 font-medium">Schema Validation Pass Rate</span>
+                    <span className="font-black text-emerald-600">{selectedSourceForDrawer.schemaValidation}</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200/80">
+                    <span className="text-slate-600 font-medium">Identity Resolution Rate</span>
+                    <span className="font-black text-indigo-600">{selectedSourceForDrawer.identityResolution}</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-slate-200/80">
+                    <span className="text-slate-600 font-medium">Last Ingestion Error</span>
+                    <span className="font-bold text-slate-400">{selectedSourceForDrawer.lastError}</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+              <button
+                onClick={() => {
+                  setSelectedSourceForDrawer(null);
+                  if (onNavigateToDataSources) onNavigateToDataSources();
+                }}
+                className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-xs flex items-center justify-center space-x-1.5 cursor-pointer"
+              >
+                <span>Manage in Data Sources</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================
+          7. MODAL: "+ CREATE EVENT DEFINITION" WORKFLOW
       ================================================== */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
