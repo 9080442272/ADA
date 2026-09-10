@@ -519,13 +519,11 @@ export default function EventsView({
                   Events
                 </h1>
                 <span className="px-2.5 py-0.5 text-[11px] font-extrabold bg-indigo-50 text-indigo-700 rounded-full border border-indigo-200">
-                  Behavior Intelligence
+                  Behavior → Intelligence
                 </span>
               </div>
               <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                {activeTab === "sources" 
-                  ? "Monitor the sources sending behavioral events into ADA and quickly identify tracking issues."
-                  : "Track customer behavior and turn it into actionable audience signals."}
+                Track customer behavior and turn it into actionable audience signals.
               </p>
             </div>
           </div>
@@ -556,55 +554,71 @@ export default function EventsView({
         </div>
 
         {/* 3 Sub-Navigation Tabs */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 w-fit text-xs font-extrabold">
-            <button
-              onClick={() => setActiveTab("stream")}
-              className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
-                activeTab === "stream"
-                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Activity className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Event Stream</span>
-            </button>
+        <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 w-fit text-xs font-extrabold">
+          <button
+            onClick={() => setActiveTab("stream")}
+            className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
+              activeTab === "stream"
+                ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Activity className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Event Stream</span>
+          </button>
 
-            <button
-              onClick={() => setActiveTab("definitions")}
-              className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
-                activeTab === "definitions"
-                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Event Definitions</span>
-            </button>
+          <button
+            onClick={() => setActiveTab("definitions")}
+            className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
+              activeTab === "definitions"
+                ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Event Definitions</span>
+          </button>
 
-            <button
-              onClick={() => setActiveTab("sources")}
-              className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
-                activeTab === "sources"
-                  ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Database className="w-3.5 h-3.5 text-indigo-600" />
-              <span>Tracking Sources</span>
-            </button>
+          <button
+            onClick={() => setActiveTab("sources")}
+            className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
+              activeTab === "sources"
+                ? 'bg-white text-slate-900 shadow-xs border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Database className="w-3.5 h-3.5 text-indigo-600" />
+            <span>Tracking Sources</span>
+          </button>
+        </div>
+
+        {/* 4 Compact Scannable Metrics Cards Grid (NO horizontal scroll strip) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+          
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Events ingested</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">842,109 <span className="text-xs font-semibold text-slate-500">/ 24h</span></div>
+            <div className="text-[11px] font-extrabold text-emerald-600">+14.2% vs yesterday</div>
           </div>
 
-          {/* Compact Infrastructure Health Summary Bar */}
-          <div className="flex items-center space-x-4 text-[11px] font-semibold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/70 overflow-x-auto">
-            {healthStats.map((st, i) => (
-              <div key={i} className="flex items-center space-x-1.5 shrink-0">
-                <span className="text-slate-400 font-bold">{st.label}:</span>
-                <span className="font-extrabold text-slate-800">{st.value}</span>
-                {i < healthStats.length - 1 && <span className="text-slate-300 ml-2">|</span>}
-              </div>
-            ))}
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Active sources</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">4 connected</div>
+            <div className="text-[11px] font-extrabold text-emerald-600">100% operational</div>
           </div>
+
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Avg latency</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">42 ms</div>
+            <div className="text-[11px] font-semibold text-slate-500">Sub-second SLA</div>
+          </div>
+
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Signal conversion</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">94.8%</div>
+            <div className="text-[11px] font-extrabold text-purple-700">Behavior → AI signal</div>
+          </div>
+
         </div>
 
       </div>
