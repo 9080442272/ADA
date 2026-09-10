@@ -18,7 +18,7 @@ export default function WhyTheseModal({ isOpen, onClose, customer }) {
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">Why ADA Recommends This Action</h3>
-              <p className="text-[11px] text-slate-400">Clear business explainability for Priya Sharma</p>
+              <p className="text-[11px] text-slate-400">Explainable recommendation for {customer?.name || "TechGear Europe"}</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-white p-1 rounded-lg">

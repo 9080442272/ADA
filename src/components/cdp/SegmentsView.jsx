@@ -77,7 +77,7 @@ export default function SegmentsView({ customer, onShowToast }) {
     { label: "Product Adoption Rate", category: "Usage Attribute", type: "number", defaultOp: "greater_than_or_equal" },
     { label: "Marketing Intent Score", category: "AI-Derived Attribute", isAi: true, type: "number", defaultOp: "greater_than_or_equal" },
     { label: "Current Product", category: "Commercial Attribute", type: "select", options: ["myPricing", "myOrders", "Catalog Engine", "Omnichannel Hub"] },
-    { label: "Account Owner", category: "Standard Account Attribute", type: "select", options: ["Antoine Laurent", "Sarah Jenkins", "Marc Moreau", "Elena Rostova"] },
+    { label: "Account Owner", category: "Standard Account Attribute", type: "select", options: ["Claire Dubois", "Antoine Laurent", "Sarah Jenkins", "Marc Moreau", "Elena Rostova"] },
     { label: "Lead Source", category: "Marketing Attribute", type: "select", options: ["Inbound Web", "Outbound Sales", "Partner Referral", "Trade Event"] }
   ];
 

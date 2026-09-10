@@ -360,10 +360,10 @@ export default function PeopleView({ customer, onSelectCustomer, onShowToast }) 
           
           <div className="flex items-center space-x-6 font-bold overflow-x-auto">
             {[
-              { id: "All customers", label: "All customers (125,482)" },
-              { id: "Recently added", label: "Recently added (3,241)" },
-              { id: "Recently active", label: "Recently active (12,492)" },
-              { id: "Duplicates", label: "Duplicates (26)" }
+              { id: "All customers", label: "All accounts (8,420)" },
+              { id: "Recently added", label: "Recently added (420)" },
+              { id: "Recently active", label: "Recently active (1,240)" },
+              { id: "Duplicates", label: "Duplicates (1)" }
             ].map(tab => (
               <button
                 key={tab.id}
@@ -523,7 +523,7 @@ export default function PeopleView({ customer, onSelectCustomer, onShowToast }) 
         {/* 6. PAGINATION FOOTER */}
         <div className="p-4 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-semibold text-slate-600">
           <div>
-            Showing 1–{filteredCustomers.length} of 125,482 customers
+            Showing 1–{filteredCustomers.length} of 8,420 B2B accounts
           </div>
 
           <div className="flex items-center space-x-1">
