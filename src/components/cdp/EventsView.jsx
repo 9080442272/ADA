@@ -553,8 +553,37 @@ export default function EventsView({
           </div>
         </div>
 
-        {/* 3 Sub-Navigation Tabs */}
-        <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 w-fit text-xs font-extrabold">
+        {/* 4 Compact Scannable Metrics Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+          
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Events ingested</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">842,109 <span className="text-xs font-semibold text-slate-500">/ 24h</span></div>
+            <div className="text-[11px] font-extrabold text-emerald-600">+14.2% vs yesterday</div>
+          </div>
+
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Active sources</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">4 connected</div>
+            <div className="text-[11px] font-extrabold text-emerald-600">100% operational</div>
+          </div>
+
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Avg latency</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">42 ms</div>
+            <div className="text-[11px] font-semibold text-slate-500">Sub-second SLA</div>
+          </div>
+
+          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Signal conversion</div>
+            <div className="text-lg font-black text-slate-900 tracking-tight">94.8%</div>
+            <div className="text-[11px] font-extrabold text-purple-700">Behavior → AI signal</div>
+          </div>
+
+        </div>
+
+        {/* 3 Sub-Navigation Tabs (Placed below KPIs) */}
+        <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200/80 w-fit text-xs font-extrabold pt-1">
           <button
             onClick={() => setActiveTab("stream")}
             className={`px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center space-x-2 ${
@@ -590,35 +619,6 @@ export default function EventsView({
             <Database className="w-3.5 h-3.5 text-indigo-600" />
             <span>Tracking Sources</span>
           </button>
-        </div>
-
-        {/* 4 Compact Scannable Metrics Cards Grid (NO horizontal scroll strip) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-          
-          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Events ingested</div>
-            <div className="text-lg font-black text-slate-900 tracking-tight">842,109 <span className="text-xs font-semibold text-slate-500">/ 24h</span></div>
-            <div className="text-[11px] font-extrabold text-emerald-600">+14.2% vs yesterday</div>
-          </div>
-
-          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Active sources</div>
-            <div className="text-lg font-black text-slate-900 tracking-tight">4 connected</div>
-            <div className="text-[11px] font-extrabold text-emerald-600">100% operational</div>
-          </div>
-
-          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Avg latency</div>
-            <div className="text-lg font-black text-slate-900 tracking-tight">42 ms</div>
-            <div className="text-[11px] font-semibold text-slate-500">Sub-second SLA</div>
-          </div>
-
-          <div className="bg-slate-50/90 p-3.5 rounded-xl border border-slate-200/80 space-y-1">
-            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Signal conversion</div>
-            <div className="text-lg font-black text-slate-900 tracking-tight">94.8%</div>
-            <div className="text-[11px] font-extrabold text-purple-700">Behavior → AI signal</div>
-          </div>
-
         </div>
 
       </div>
