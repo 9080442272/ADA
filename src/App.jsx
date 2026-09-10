@@ -177,19 +177,24 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* RENDER CUSTOMER PROFILE HEADER & TABS ONLY WHEN VIEWING SPECIFIC ACCOUNT DETAILS */}
-          {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
-            <div className="px-6 pt-4 max-w-7xl mx-auto w-full space-y-3">
-              <CustomerHeader 
-                customer={customer}
-                onStartConversation={() => setIsStartChatOpen(true)}
-                onActionSelect={handleHeaderActionSelect}
-                onBackToPeople={() => setActiveSubTab("People")}
-              />
+          {/* UNIFIED CUSTOMER 360 HEADER & TABS BAR (ALL 10 CAPABILITIES) */}
+          {activeSubTab !== "People" && (
+            <div className="space-y-3">
+              {/* Render Customer Profile Header for Account 360 views */}
+              {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
+                <div className="px-6 pt-4 max-w-7xl mx-auto w-full">
+                  <CustomerHeader 
+                    customer={customer}
+                    onStartConversation={() => setIsStartChatOpen(true)}
+                    onActionSelect={handleHeaderActionSelect}
+                    onBackToPeople={() => setActiveSubTab("People")}
+                  />
+                </div>
+              )}
 
-              {/* 4 TABS FOR SPECIFIC CUSTOMER DETAIL (Overview, Interactions, Commercial, Attributes) */}
+              {/* ALL 10 TABS STRIP (Overview, Interactions, Commercial, Attributes, Segments, Events, Tags & DNC, Duplicates, Data Sources, Compliance) */}
               <CustomerTabs 
-                activeTab={activeTab} 
+                activeTab={activeSubTab} 
                 onSelectTab={(tab) => {
                   setActiveTab(tab);
                   setActiveSubTab(tab);
