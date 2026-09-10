@@ -301,11 +301,11 @@ export default function PrimaryDecisionBlock({
 
       </div>
 
-      {/* 2. ENGAGEMENT SUMMARY & RECENT ACTIVITY CONTAINER (Pixel-Perfect Match to Screenshot Design) */}
-      <div className="space-y-5">
+      {/* 2. UNIFIED SINGLE CARD SECTION: ENGAGEMENT SUMMARY & RECENT ACTIVITY MERGED */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 space-y-6">
         
-        {/* TOP SECTION: Engagement summary (Last 30 days) */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+        {/* TOP HALF: Engagement summary (Last 30 days) */}
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-extrabold text-slate-900 tracking-tight flex items-center space-x-2">
               <span>Engagement summary</span>
@@ -354,8 +354,8 @@ export default function PrimaryDecisionBlock({
           </div>
         </div>
 
-        {/* BOTTOM SECTION: Recent activity */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 space-y-5">
+        {/* INNER SECTION DIVIDER LINE */}
+        <div className="border-t border-slate-100 pt-5 space-y-5">
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
