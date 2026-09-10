@@ -79,33 +79,51 @@ export default function Sidebar({ activeSubTab = "Overview", onSelectSubTab }) {
           </button>
         </div>
 
-        {/* SECTION 2: ACCOUNT 360 (Entity-Level Experience) */}
-        <div className="pt-2">
-          <div className="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-            Account 360
+        {/* SECTION 2: CUSTOMER 360 (Global Directory & Account Detail) */}
+        <div className="pt-2 space-y-1">
+          <div className="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>Customer 360</span>
+            <span className="text-[9px] font-normal text-slate-400">CAIP</span>
           </div>
 
+          {/* 1. Global People Directory */}
           <button 
-            onClick={() => onSelectSubTab && onSelectSubTab("Overview")}
-            className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border font-semibold text-left transition-all cursor-pointer ${
-              ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab)
-                ? 'bg-indigo-600 text-white border-indigo-500 shadow-sm'
+            onClick={() => onSelectSubTab && onSelectSubTab("People")}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-xs font-bold text-left transition-all cursor-pointer ${
+              activeSubTab === "People"
+                ? 'bg-indigo-600 text-white border-indigo-500 shadow-xs'
                 : 'bg-slate-800/60 text-slate-300 hover:text-white hover:bg-slate-800 border-slate-700/60'
             }`}
           >
             <div className="flex items-center space-x-2.5 truncate">
-              <Building2 className={`w-4 h-4 ${["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? 'text-white' : 'text-indigo-400'}`} />
+              <Users className={`w-4 h-4 ${activeSubTab === "People" ? 'text-white' : 'text-indigo-400'}`} />
+              <span className="truncate">People</span>
+            </div>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
+              activeSubTab === "People" ? 'bg-indigo-700 text-indigo-100' : 'bg-slate-800 text-slate-400'
+            }`}>
+              125.4k
+            </span>
+          </button>
+
+          {/* 2. Specific Customer Detail (TechGear Europe) */}
+          <button 
+            onClick={() => onSelectSubTab && onSelectSubTab("Overview")}
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-xs font-semibold text-left transition-all cursor-pointer ${
+              ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab)
+                ? 'bg-indigo-600/90 text-white border-indigo-500/80 shadow-xs'
+                : 'bg-slate-800/30 text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 border-slate-800/80'
+            }`}
+          >
+            <div className="flex items-center space-x-2.5 truncate">
+              <Building2 className={`w-3.5 h-3.5 ${["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? 'text-white' : 'text-slate-500'}`} />
               <div className="truncate">
-                <div className="text-xs font-bold leading-tight">Accounts</div>
-                <div className="text-[10px] font-normal opacity-80 truncate">TechGear Europe</div>
+                <div className="text-xs font-bold leading-tight truncate">TechGear Europe</div>
+                <div className="text-[10px] font-mono opacity-70 truncate">ACC-89420-EU</div>
               </div>
             </div>
-            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${
-              ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab)
-                ? 'bg-indigo-700 text-indigo-100'
-                : 'bg-slate-700 text-slate-300'
-            }`}>
-              1.4k
+            <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
+              360
             </span>
           </button>
         </div>

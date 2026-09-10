@@ -11,6 +11,8 @@ import InteractionsTab from './components/InteractionsTab';
 import CommercialUsageTab from './components/CommercialUsageTab';
 import AttributesTab from './components/AttributesTab';
 
+import PeopleView from './components/PeopleView';
+
 // CDP Modules
 import SegmentsView from './components/cdp/SegmentsView';
 import TagsDncView from './components/cdp/TagsDncView';
@@ -175,8 +177,8 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* CHECK IF USER IS IN ACCOUNT 360 VS GLOBAL CDP */}
-          {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? (
+          {/* CHECK IF USER IS IN ACCOUNT 360 VS GLOBAL CDP VS PEOPLE DIRECTORY */}
+          {activeSubTab === "People" ? null : ["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) ? (
             /* ACCOUNT 360 HEADER & TABS (Answers "WHO IS THIS ACCOUNT?") */
             <div className="px-6 pt-4">
               <CustomerHeader 
@@ -238,7 +240,17 @@ export default function App() {
           {/* MAIN PAGE DECISION-ORIENTED CONTENT HIERARCHY */}
           <main className="p-6 max-w-7xl w-full mx-auto space-y-6">
             
-            {activeSubTab === "Segments" ? (
+            {activeSubTab === "People" ? (
+              <PeopleView 
+                customer={customer} 
+                onSelectCustomer={(c) => {
+                  setActiveTab("Overview");
+                  setActiveSubTab("Overview");
+                  showToast(`Opened Account 360 profile for ${c.name}`);
+                }}
+                onShowToast={showToast}
+              />
+            ) : activeSubTab === "Segments" ? (
               <SegmentsView customer={customer} onShowToast={showToast} />
             ) : activeSubTab === "Tags & DNC" ? (
               <TagsDncView customer={customer} onShowToast={showToast} />
