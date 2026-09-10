@@ -19,6 +19,8 @@ import TagsDncView from './components/cdp/TagsDncView';
 import DuplicatesView from './components/cdp/DuplicatesView';
 import DataSourcesView from './components/cdp/DataSourcesView';
 import ComplianceView from './components/cdp/ComplianceView';
+import EventsView from './components/cdp/EventsView';
+import GlobalAttributesView from './components/cdp/GlobalAttributesView';
 
 // Modals
 import ActionModal from './components/modals/ActionModal';
@@ -190,10 +192,20 @@ export default function App() {
                 }}
                 onShowToast={showToast}
               />
+            ) : ["Global_Attributes", "Segments", "Events", "Tags & DNC", "Duplicates", "Data Sources", "Compliance & GDPR"].includes(activeSubTab) ? (
+              <div>
+                {activeSubTab === "Global_Attributes" && <GlobalAttributesView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Segments" && <SegmentsView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Events" && <EventsView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Tags & DNC" && <TagsDncView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Duplicates" && <DuplicatesView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Data Sources" && <DataSourcesView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Compliance & GDPR" && <ComplianceView customer={customer} onShowToast={showToast} />}
+              </div>
             ) : (
               <div className="space-y-5">
                 
-                {/* 1. CUSTOMER PROFILE HEADER SECTION */}
+                {/* 1. CUSTOMER PROFILE HEADER SECTION (B2B Account 360) */}
                 <CustomerHeader 
                   customer={customer}
                   onStartConversation={() => setIsStartChatOpen(true)}
@@ -201,7 +213,7 @@ export default function App() {
                   onBackToPeople={() => setActiveSubTab("People")}
                 />
 
-                {/* 2. CUSTOMER TABS STRIP (POSITIONED DIRECTLY UNDER THE HEADER SECTION) */}
+                {/* 2. CUSTOMER TABS STRIP (4 ACCOUNT TABS: Overview, Interactions, Commercial & Usage, Attributes) */}
                 <CustomerTabs 
                   activeTab={activeSubTab} 
                   onSelectTab={(tab) => {
@@ -210,37 +222,8 @@ export default function App() {
                   }} 
                 />
 
-                {/* 3. ACTIVE TAB VIEW CONTENT */}
-                {activeSubTab === "Segments" ? (
-                  <SegmentsView customer={customer} onShowToast={showToast} />
-                ) : activeSubTab === "Tags & DNC" ? (
-                  <TagsDncView customer={customer} onShowToast={showToast} />
-                ) : activeSubTab === "Duplicates" ? (
-                  <DuplicatesView customer={customer} onShowToast={showToast} />
-                ) : activeSubTab === "Data Sources" ? (
-                  <DataSourcesView customer={customer} onShowToast={showToast} />
-                ) : activeSubTab === "Compliance & GDPR" ? (
-                  <ComplianceView customer={customer} onShowToast={showToast} />
-                ) : activeSubTab === "Events" ? (
-                  <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-                      <Sparkles className="w-6 h-6" />
-                    </div>
-                    <h2 className="text-lg font-bold text-slate-900">Real-Time Account Telemetry Stream</h2>
-                    <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
-                      Viewing real-time event telemetry stream across 840k events ingested for TechGear Europe.
-                    </p>
-                    <button 
-                      onClick={() => {
-                        setActiveTab("Interactions");
-                        setActiveSubTab("Interactions");
-                      }}
-                      className="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-xs hover:bg-indigo-700 cursor-pointer"
-                    >
-                      View Interactions Timeline
-                    </button>
-                  </div>
-                ) : activeTab === "Overview" ? (
+                {/* 3. ACCOUNT 360 TAB CONTENT */}
+                {activeTab === "Overview" ? (
                   <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
                     
                     {/* PRIMARY DECISION BLOCK & RECENT INTERACTIONS SUMMARY (8 Cols) */}

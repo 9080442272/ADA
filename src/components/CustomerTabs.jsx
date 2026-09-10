@@ -17,13 +17,7 @@ export default function CustomerTabs({ activeTab, onSelectTab }) {
     { id: "Overview", label: "Overview", icon: LayoutDashboard, badge: "360" },
     { id: "Interactions", label: "Interactions", icon: MessageSquare, badge: "18" },
     { id: "Commercial & Usage", label: "Commercial & Usage", icon: CreditCard, badge: "Active" },
-    { id: "Attributes", label: "Attributes", icon: Sliders, badge: "52" },
-    { id: "Segments", label: "Segments", icon: Layers, badge: "48" },
-    { id: "Events", label: "Events", icon: Activity, badge: "840k" },
-    { id: "Tags & DNC", label: "Tags & DNC", icon: Tag, badge: "28" },
-    { id: "Duplicates", label: "Duplicates", icon: Copy, badge: "2" },
-    { id: "Data Sources", label: "Data Sources", icon: Database, badge: "6" },
-    { id: "Compliance & GDPR", label: "Compliance & GDPR", icon: ShieldCheck, badge: "Verified" }
+    { id: "Attributes", label: "Attributes", icon: Sliders, badge: "52" }
   ];
 
   return (
