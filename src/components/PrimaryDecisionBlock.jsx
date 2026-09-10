@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Sparkles, 
   HelpCircle, 
   CheckCircle2, 
   Check, 
   ArrowRight, 
-  ArrowDown,
   Megaphone,
-  Brain,
-  GitCommit,
   Clock,
   Globe,
   Mail,
-  Video,
-  FileText
+  MessageSquare,
+  MousePointer,
+  ShoppingCart,
+  ShoppingBag,
+  Tag,
+  ChevronDown,
+  FileText,
+  Eye,
+  CreditCard,
+  Layers
 } from 'lucide-react';
 
 export default function PrimaryDecisionBlock({ 
@@ -25,19 +30,127 @@ export default function PrimaryDecisionBlock({
 }) {
   const { primaryInsight, primaryAction, journey } = customer;
 
-  // Sample recent chronological interactions for overview preview
-  const recentInteractionsPreview = [
-    { title: "Viewed myPricing product page", channel: "Website", detail: "4th visit this week", badgeColor: "bg-blue-100 text-blue-800 border-blue-200", time: "Today, 10:42 AM" },
-    { title: "Opened & clicked Pricing Strategy campaign email", channel: "Email", detail: "Campaign #PRC-2026", badgeColor: "bg-indigo-100 text-indigo-800 border-indigo-200", time: "Today, 9:15 AM" },
-    { title: "Downloaded Dynamic Pricing Playbook", channel: "Website", detail: "24-page PDF resource", badgeColor: "bg-purple-100 text-purple-800 border-purple-200", time: "3 days ago" },
-    { title: "Attended Competitive Pricing Strategy webinar", channel: "Webinar", detail: "42 min attendance", badgeColor: "bg-amber-100 text-amber-800 border-amber-200", time: "5 days ago" }
+  const [activeActivityFilter, setActiveActivityFilter] = useState("All");
+  const [selectedTimeRange, setSelectedTimeRange] = useState("Last 30 days");
+
+  // Engagement Summary KPI metrics (matching screenshot layout)
+  const engagementStats = [
+    {
+      id: "stat-1",
+      count: "5",
+      label: "Conversations",
+      trend: "↑ 67%",
+      icon: MessageSquare,
+      iconBg: "bg-emerald-100 text-emerald-600",
+      trendBg: "bg-emerald-50 text-emerald-700 border-emerald-200"
+    },
+    {
+      id: "stat-2",
+      count: "12",
+      label: "Product views",
+      trend: "↑ 20%",
+      icon: MousePointer,
+      iconBg: "bg-blue-100 text-blue-600",
+      trendBg: "bg-emerald-50 text-emerald-700 border-emerald-200"
+    },
+    {
+      id: "stat-3",
+      count: "2",
+      label: "Add to carts",
+      trend: "↑ 100%",
+      icon: ShoppingCart,
+      iconBg: "bg-purple-100 text-purple-600",
+      trendBg: "bg-emerald-50 text-emerald-700 border-emerald-200"
+    },
+    {
+      id: "stat-4",
+      count: "1",
+      label: "Purchase",
+      trend: "↑ 0%",
+      icon: ShoppingBag,
+      iconBg: "bg-red-100 text-red-600",
+      trendBg: "bg-emerald-50 text-emerald-700 border-emerald-200"
+    }
   ];
+
+  // Recent Activity Items List (Matching exact screenshot structure & B2B Boostmyshop context)
+  const activitiesList = [
+    {
+      id: "act-1",
+      title: "Purchase completed",
+      subtitle: "Order #ORD-92831 • €3,499",
+      time: "2 days ago",
+      type: "Orders",
+      icon: ShoppingCart,
+      iconBg: "bg-red-100 text-red-600 border-red-200",
+      hasViewBtn: false
+    },
+    {
+      id: "act-2",
+      title: "Conversation with AI Assistant",
+      subtitle: "Asked about Amazon API repricing",
+      time: "3 days ago",
+      type: "Conversations",
+      icon: MessageSquare,
+      iconBg: "bg-blue-100 text-blue-600 border-blue-200",
+      hasViewBtn: true,
+      isAi: true
+    },
+    {
+      id: "act-3",
+      title: "Visited product page",
+      subtitle: "myPricing ROI Calculator",
+      time: "4 days ago",
+      type: "Events",
+      icon: MousePointer,
+      iconBg: "bg-slate-100 text-slate-700 border-slate-200",
+      hasViewBtn: false
+    },
+    {
+      id: "act-4",
+      title: "Abandoned cart",
+      subtitle: "2 items • €4,998",
+      time: "5 days ago",
+      type: "Orders",
+      icon: ShoppingCart,
+      iconBg: "bg-red-100 text-red-600 border-red-200",
+      hasViewBtn: false
+    },
+    {
+      id: "act-5",
+      title: "Email opened",
+      subtitle: "New Pricing Strategy Campaign",
+      time: "6 days ago",
+      type: "Events",
+      icon: Mail,
+      iconBg: "bg-blue-100 text-blue-600 border-blue-200",
+      hasViewBtn: false
+    },
+    {
+      id: "act-6",
+      title: "Tag added",
+      subtitle: "Interested in new launch",
+      isTagPill: true,
+      tagLabel: "Interested in new launch",
+      time: "1 week ago",
+      type: "System",
+      icon: Tag,
+      iconBg: "bg-red-100 text-red-600 border-red-200",
+      hasViewBtn: false
+    }
+  ];
+
+  // Filter activities
+  const filteredActivities = activitiesList.filter(act => {
+    if (activeActivityFilter === "All") return true;
+    return act.type === activeActivityFilter;
+  });
 
   return (
     <div className="space-y-6">
       
-      {/* 1. HERO AI MARKETING DECISION ENGINE (Clean White Enterprise Card) */}
-      <div className="bg-white rounded-xl border border-slate-200/90 shadow-sm p-6 space-y-5">
+      {/* 1. HERO AI MARKETING DECISION ENGINE */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 space-y-5">
         
         {/* AI Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
@@ -92,7 +205,7 @@ export default function PrimaryDecisionBlock({
                 {primaryInsight.title}
               </h3>
 
-              {/* Explanation Paragraph (Highly Readable, font-normal) */}
+              {/* Explanation Paragraph */}
               <p className="text-sm font-normal text-slate-700 bg-white p-3.5 rounded-xl border border-slate-200/80 leading-relaxed shadow-2xs">
                 "{primaryInsight.headline}"
               </p>
@@ -134,7 +247,6 @@ export default function PrimaryDecisionBlock({
           <div className="lg:col-span-5 bg-slate-900 text-white rounded-xl p-5 flex flex-col justify-between space-y-4 shadow-sm border border-slate-800">
             
             <div className="space-y-3">
-              
               {/* Header */}
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center space-x-1.5">
@@ -163,10 +275,9 @@ export default function PrimaryDecisionBlock({
               <div className="text-xs text-indigo-200 bg-slate-800/50 p-2.5 rounded-lg border border-slate-700/60 font-mono">
                 <span className="text-slate-400 font-bold">Target Campaign:</span> {primaryAction.payload.campaignName}
               </div>
-
             </div>
 
-            {/* Primary Action Button (Visually Dominant) */}
+            {/* Primary Action Button */}
             <div className="pt-2">
               {isExecuted ? (
                 <div className="w-full py-3 bg-emerald-600 text-white text-xs font-extrabold rounded-xl flex items-center justify-center space-x-2 shadow-sm">
@@ -190,93 +301,152 @@ export default function PrimaryDecisionBlock({
 
       </div>
 
-      {/* 2. LATEST ACTIVITY CARD (Full 8-Cols Width to balance sidebar height) */}
-      <div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-2xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Clock className="w-3.5 h-3.5" />
-            </div>
-            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
-              LATEST ACTIVITY
-            </h3>
-          </div>
-          <button 
-            onClick={onViewFullTimeline}
-            className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center space-x-1 cursor-pointer transition-colors"
-          >
-            <span>View full timeline →</span>
-          </button>
-        </div>
+      {/* 2. ENGAGEMENT SUMMARY & RECENT ACTIVITY CONTAINER (Pixel-Perfect Match to Screenshot Design) */}
+      <div className="space-y-5">
+        
+        {/* TOP SECTION: Engagement summary (Last 30 days) */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-extrabold text-slate-900 tracking-tight flex items-center space-x-2">
+              <span>Engagement summary</span>
+              <span className="text-xs font-medium text-slate-400">(Last 30 days)</span>
+            </h2>
 
-        {/* Chronological Activity List */}
-        <div className="space-y-2.5 text-xs">
-          <div className="p-3 bg-slate-50/80 border border-slate-200/70 rounded-xl flex items-center justify-between hover:bg-slate-100/60 transition-colors">
-            <div className="flex items-center space-x-3 truncate pr-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 shrink-0 ring-4 ring-indigo-50" />
-              <div className="truncate">
-                <div className="font-bold text-slate-900">Viewed myPricing ROI calculator</div>
-                <div className="text-[11px] text-slate-500 font-medium">4th visit this week • Spent 4m 12s on page</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/80 rounded-md">Website</span>
-              <span className="text-[11px] text-slate-400 font-mono">Today · 10:42 AM</span>
+            <div className="relative">
+              <select 
+                value={selectedTimeRange}
+                onChange={(e) => setSelectedTimeRange(e.target.value)}
+                className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-700 focus:outline-none cursor-pointer shadow-2xs appearance-none pr-7"
+              >
+                <option value="Last 30 days">Last 30 days</option>
+                <option value="Last 7 days">Last 7 days</option>
+                <option value="Last 90 days">Last 90 days</option>
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
           </div>
 
-          <div className="p-3 bg-slate-50/80 border border-slate-200/70 rounded-xl flex items-center justify-between hover:bg-slate-100/60 transition-colors">
-            <div className="flex items-center space-x-3 truncate pr-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 shrink-0 ring-4 ring-indigo-50" />
-              <div className="truncate">
-                <div className="font-bold text-slate-900">Clicked "Explore myPricing" in campaign email</div>
-                <div className="text-[11px] text-slate-500 font-medium">Pricing Strategy Campaign #PRC-2026</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80 rounded-md">Email</span>
-              <span className="text-[11px] text-slate-400 font-mono">Today · 9:15 AM</span>
-            </div>
-          </div>
+          {/* 4 Stat Cards Row */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {engagementStats.map((st) => {
+              const Icon = st.icon;
+              return (
+                <div key={st.id} className="bg-slate-50/70 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold ${st.iconBg}`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                  </div>
 
-          <div className="p-3 bg-slate-50/80 border border-slate-200/70 rounded-xl flex items-center justify-between hover:bg-slate-100/60 transition-colors">
-            <div className="flex items-center space-x-3 truncate pr-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 shrink-0 ring-4 ring-emerald-50" />
-              <div className="truncate">
-                <div className="font-bold text-slate-900">Asked ADA about Amazon API repricing</div>
-                <div className="text-[11px] text-slate-500 font-medium">AI Copilot Chat • Inquiry answered in 2s</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-md">Conversation</span>
-              <span className="text-[11px] text-slate-400 font-mono">Yesterday</span>
-            </div>
-          </div>
+                  <div>
+                    <div className="text-2xl font-black text-slate-900 tracking-tight">{st.count}</div>
+                    <div className="text-xs font-semibold text-slate-500 mt-0.5">{st.label}</div>
+                  </div>
 
-          <div className="p-3 bg-slate-50/80 border border-slate-200/70 rounded-xl flex items-center justify-between hover:bg-slate-100/60 transition-colors">
-            <div className="flex items-center space-x-3 truncate pr-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-purple-600 shrink-0 ring-4 ring-purple-50" />
-              <div className="truncate">
-                <div className="font-bold text-slate-900">Downloaded Dynamic Pricing Playbook</div>
-                <div className="text-[11px] text-slate-500 font-medium">24-page PDF guide downloaded by Antoine Laurent</div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 shrink-0">
-              <span className="px-2 py-0.5 text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200/80 rounded-md">Resource</span>
-              <span className="text-[11px] text-slate-400 font-mono">3 days ago</span>
-            </div>
+                  <div className="pt-1">
+                    <span className="px-2 py-0.5 text-[11px] font-extrabold rounded-md bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      {st.trend}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        <div className="text-[11px] text-slate-400 pt-2 flex items-center justify-between border-t border-slate-100">
-          <span>Showing 4 latest events for TechGear Europe</span>
-          <button 
-            onClick={onViewFullTimeline}
-            className="text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer"
-          >
-            Detailed interaction history in Interactions →
-          </button>
+        {/* BOTTOM SECTION: Recent activity */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs p-6 space-y-5">
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h2 className="text-lg font-extrabold text-slate-900 tracking-tight">
+              Recent activity
+            </h2>
+
+            {/* Filter Pills: All, Events, Conversations, Orders, System */}
+            <div className="flex items-center space-x-1.5 overflow-x-auto text-xs">
+              {["All", "Events", "Conversations", "Orders", "System"].map(filter => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveActivityFilter(filter)}
+                  className={`px-4 py-1.5 rounded-full font-bold transition-all cursor-pointer ${
+                    activeActivityFilter === filter 
+                      ? 'bg-blue-600 text-white shadow-xs' 
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Timeline List (Vertical line with icon nodes) */}
+          <div className="relative pl-6 space-y-6 before:absolute before:left-3.5 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200">
+            {filteredActivities.map((act) => {
+              const Icon = act.icon;
+              return (
+                <div key={act.id} className="relative flex items-start justify-between gap-4 group">
+                  
+                  {/* Timeline Circle Icon Node */}
+                  <div className={`absolute -left-6 top-0 w-7 h-7 rounded-full flex items-center justify-center border-2 bg-white z-10 ${act.iconBg}`}>
+                    <Icon className="w-3.5 h-3.5" />
+                  </div>
+
+                  {/* Activity Details */}
+                  <div className="space-y-1 pl-3 flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-extrabold text-slate-900 text-sm">{act.title}</span>
+                      {act.isAi && (
+                        <span className="w-3.5 h-3.5 rounded-full bg-indigo-100 text-indigo-600 inline-flex items-center justify-center">
+                          <Sparkles className="w-2.5 h-2.5" />
+                        </span>
+                      )}
+                    </div>
+
+                    {act.isTagPill ? (
+                      <div className="pt-0.5">
+                        <span className="px-3 py-1 bg-amber-100 text-amber-950 font-bold text-xs rounded-full border border-amber-200 inline-block">
+                          {act.tagLabel}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-slate-500 font-medium flex items-center space-x-2">
+                        <span>{act.subtitle}</span>
+                        {act.hasViewBtn && (
+                          <button 
+                            onClick={onViewFullTimeline}
+                            className="px-2 py-0.5 bg-blue-100 hover:bg-blue-200 text-blue-700 font-extrabold text-[11px] rounded-md transition-colors cursor-pointer"
+                          >
+                            View
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Time Label */}
+                  <div className="text-xs text-slate-400 font-semibold shrink-0 pt-0.5">
+                    {act.time}
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Full-Width View All Activity CTA Button */}
+          <div className="pt-2">
+            <button
+              onClick={onViewFullTimeline}
+              className="w-full py-3 bg-slate-50 hover:bg-slate-100 text-indigo-600 border border-slate-200 rounded-xl text-xs font-extrabold flex items-center justify-center space-x-2 transition-all cursor-pointer"
+            >
+              <span>View all activity</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
         </div>
+
       </div>
 
     </div>
