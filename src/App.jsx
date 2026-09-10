@@ -177,30 +177,9 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* UNIFIED CUSTOMER 360 TABS BAR (FIXED POSITION DIRECTLY BELOW APP HEADER - ZERO JUMPINESS) */}
-          {activeSubTab !== "People" && (
-            <CustomerTabs 
-              activeTab={activeSubTab} 
-              onSelectTab={(tab) => {
-                setActiveTab(tab);
-                setActiveSubTab(tab);
-              }} 
-            />
-          )}
-
-          {/* MAIN PAGE DECISION-ORIENTED CONTENT HIERARCHY */}
+          {/* MAIN PAGE CONTENT AREA */}
           <main className="p-6 max-w-7xl w-full mx-auto space-y-6">
             
-            {/* Render Customer Profile Header for Account 360 profile views (Overview, Interactions, Commercial, Attributes) */}
-            {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
-              <CustomerHeader 
-                customer={customer}
-                onStartConversation={() => setIsStartChatOpen(true)}
-                onActionSelect={handleHeaderActionSelect}
-                onBackToPeople={() => setActiveSubTab("People")}
-              />
-            )}
-
             {activeSubTab === "People" ? (
               <PeopleView 
                 customer={customer} 
@@ -211,84 +190,108 @@ export default function App() {
                 }}
                 onShowToast={showToast}
               />
-            ) : activeSubTab === "Segments" ? (
-              <SegmentsView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Tags & DNC" ? (
-              <TagsDncView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Duplicates" ? (
-              <DuplicatesView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Data Sources" ? (
-              <DataSourcesView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Compliance & GDPR" ? (
-              <ComplianceView customer={customer} onShowToast={showToast} />
-            ) : activeSubTab === "Events" ? (
-              <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
-                  <Sparkles className="w-6 h-6" />
-                </div>
-                <h2 className="text-lg font-bold text-slate-900">Global Real-Time Event Stream</h2>
-                <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
-                  Viewing global telemetry event stream across 840k events. To view events specifically for TechGear Europe, navigate to Account 360 → Interactions.
-                </p>
-                <button 
-                  onClick={() => {
-                    setActiveTab("Interactions");
-                    setActiveSubTab("Interactions");
-                  }}
-                  className="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-xs hover:bg-indigo-700 cursor-pointer"
-                >
-                  View TechGear Europe Interactions
-                </button>
-              </div>
-            ) : activeTab === "Overview" ? (
-              <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+            ) : (
+              <div className="space-y-5">
                 
-                {/* PRIMARY DECISION BLOCK & RECENT INTERACTIONS SUMMARY (8 Cols) */}
-                <div className="xl:col-span-8 space-y-6">
-                  <PrimaryDecisionBlock 
-                    customer={customer}
-                    onExecutePrimaryAction={(act) => setSelectedActionForModal(act)}
-                    onWhyThisClick={() => setIsWhyTheseOpen(true)}
-                    isExecuted={executedActionIds.includes(customer.primaryAction.id)}
-                    onViewFullTimeline={() => {
-                      setActiveTab("Interactions");
-                      setActiveSubTab("Interactions");
-                    }}
-                  />
-                </div>
+                {/* 1. CUSTOMER PROFILE HEADER SECTION */}
+                <CustomerHeader 
+                  customer={customer}
+                  onStartConversation={() => setIsStartChatOpen(true)}
+                  onActionSelect={handleHeaderActionSelect}
+                  onBackToPeople={() => setActiveSubTab("People")}
+                />
 
-                {/* CONTEXTUAL SIDEBAR: SEGMENTS, CAMPAIGNS, SUBSCRIPTIONS (4 Cols) */}
-                <div className="xl:col-span-4">
-                  <RightSidebar 
+                {/* 2. CUSTOMER TABS STRIP (POSITIONED DIRECTLY UNDER THE HEADER SECTION) */}
+                <CustomerTabs 
+                  activeTab={activeSubTab} 
+                  onSelectTab={(tab) => {
+                    setActiveTab(tab);
+                    setActiveSubTab(tab);
+                  }} 
+                />
+
+                {/* 3. ACTIVE TAB VIEW CONTENT */}
+                {activeSubTab === "Segments" ? (
+                  <SegmentsView customer={customer} onShowToast={showToast} />
+                ) : activeSubTab === "Tags & DNC" ? (
+                  <TagsDncView customer={customer} onShowToast={showToast} />
+                ) : activeSubTab === "Duplicates" ? (
+                  <DuplicatesView customer={customer} onShowToast={showToast} />
+                ) : activeSubTab === "Data Sources" ? (
+                  <DataSourcesView customer={customer} onShowToast={showToast} />
+                ) : activeSubTab === "Compliance & GDPR" ? (
+                  <ComplianceView customer={customer} onShowToast={showToast} />
+                ) : activeSubTab === "Events" ? (
+                  <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center space-y-3">
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <h2 className="text-lg font-bold text-slate-900">Real-Time Account Telemetry Stream</h2>
+                    <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
+                      Viewing real-time event telemetry stream across 840k events ingested for TechGear Europe.
+                    </p>
+                    <button 
+                      onClick={() => {
+                        setActiveTab("Interactions");
+                        setActiveSubTab("Interactions");
+                      }}
+                      className="px-4 py-2 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-xs hover:bg-indigo-700 cursor-pointer"
+                    >
+                      View Interactions Timeline
+                    </button>
+                  </div>
+                ) : activeTab === "Overview" ? (
+                  <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                    
+                    {/* PRIMARY DECISION BLOCK & RECENT INTERACTIONS SUMMARY (8 Cols) */}
+                    <div className="xl:col-span-8 space-y-6">
+                      <PrimaryDecisionBlock 
+                        customer={customer}
+                        onExecutePrimaryAction={(act) => setSelectedActionForModal(act)}
+                        onWhyThisClick={() => setIsWhyTheseOpen(true)}
+                        isExecuted={executedActionIds.includes(customer.primaryAction.id)}
+                        onViewFullTimeline={() => {
+                          setActiveTab("Interactions");
+                          setActiveSubTab("Interactions");
+                        }}
+                      />
+                    </div>
+
+                    {/* CONTEXTUAL SIDEBAR: SEGMENTS, CAMPAIGNS, SUBSCRIPTIONS (4 Cols) */}
+                    <div className="xl:col-span-4">
+                      <RightSidebar 
+                        customer={customer}
+                        onSegmentClick={(seg) => showToast(`Filtering by segment: ${seg.name}`)}
+                        onOrderClick={(ord) => showToast(`Viewing subscription details for ${ord.name}`)}
+                        onEntityClick={(ent) => showToast(`Inspecting related graph entity: ${ent.name}`)}
+                      />
+                    </div>
+
+                  </div>
+                ) : activeTab === "Interactions" ? (
+                  <InteractionsTab 
                     customer={customer}
-                    onSegmentClick={(seg) => showToast(`Filtering by segment: ${seg.name}`)}
-                    onOrderClick={(ord) => showToast(`Viewing subscription details for ${ord.name}`)}
-                    onEntityClick={(ent) => showToast(`Inspecting related graph entity: ${ent.name}`)}
+                    onViewEventDetails={(evt) => setSelectedInteractionForDrawer(evt)}
+                    onNavigateToOverview={() => setActiveTab("Overview")}
                   />
-                </div>
+                ) : activeTab === "Commercial & Usage" ? (
+                  <CommercialUsageTab 
+                    customer={customer}
+                    onSelectProductDetails={(prod) => setSelectedProductForDrawer(prod)}
+                    onLaunchCampaign={(act) => setSelectedActionForModal(act || customer.primaryAction)}
+                  />
+                ) : activeTab === "Attributes" ? (
+                  <AttributesTab 
+                    customer={customer}
+                    onEditAttribute={(attr) => setSelectedAttributeForEdit(attr)}
+                    onAddCustomAttribute={() => setIsAddCustomAttributeOpen(true)}
+                    onViewSegmentDetails={(attr) => showToast(`Filtering CDP segments using attribute: ${attr.name}`)}
+                    onViewInsightEvidence={(attr) => showToast(`ADA Evidence: ${attr.aiDerived?.evidence?.join(" • ") || "Verified signal"}`)}
+                  />
+                ) : null}
 
               </div>
-            ) : activeTab === "Interactions" ? (
-              <InteractionsTab 
-                customer={customer}
-                onViewEventDetails={(evt) => setSelectedInteractionForDrawer(evt)}
-                onNavigateToOverview={() => setActiveTab("Overview")}
-              />
-            ) : activeTab === "Commercial & Usage" ? (
-              <CommercialUsageTab 
-                customer={customer}
-                onSelectProductDetails={(prod) => setSelectedProductForDrawer(prod)}
-                onLaunchCampaign={(act) => setSelectedActionForModal(act || customer.primaryAction)}
-              />
-            ) : activeTab === "Attributes" ? (
-              <AttributesTab 
-                customer={customer}
-                onEditAttribute={(attr) => setSelectedAttributeForEdit(attr)}
-                onAddCustomAttribute={() => setIsAddCustomAttributeOpen(true)}
-                onViewSegmentDetails={(attr) => showToast(`Filtering CDP segments using attribute: ${attr.name}`)}
-                onViewInsightEvidence={(attr) => showToast(`ADA Evidence: ${attr.aiDerived?.evidence?.join(" • ") || "Verified signal"}`)}
-              />
-            ) : null}
+            )}
 
             {/* BOTTOM VALUE PROPOSITION PARADIGM BANNER */}
             <ValuePropBanner />
