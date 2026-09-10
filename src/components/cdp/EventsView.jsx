@@ -216,49 +216,6 @@ export default function EventsView({
         </div>
       </div>
 
-      {/* 2. THE 4-STEP CDP VALUE PIPELINE BANNER */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-md space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="text-[10px] font-bold text-indigo-300 uppercase tracking-wider flex items-center space-x-1.5">
-            <Cpu className="w-3.5 h-3.5 text-indigo-400" />
-            <span>END-TO-END CDP VALUE PIPELINE</span>
-          </div>
-          <span className="text-[10px] font-mono text-slate-400">Assignment Core Workflow</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs pt-1">
-          
-          {/* Step 1 */}
-          <div className="bg-slate-800/80 border border-slate-700/80 p-3.5 rounded-xl space-y-1">
-            <div className="text-[10px] font-extrabold text-indigo-400">1. EVENT HAPPENS</div>
-            <div className="font-extrabold text-white">Real-Time Ingestion</div>
-            <div className="text-[11px] text-slate-400">Viewed myPricing Page via GTM</div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="bg-slate-800/80 border border-slate-700/80 p-3.5 rounded-xl space-y-1">
-            <div className="text-[10px] font-extrabold text-emerald-400">2. SURFACES ON 360</div>
-            <div className="font-extrabold text-white">Account Timeline</div>
-            <div className="text-[11px] text-slate-400">TechGear Europe → Interactions</div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="bg-slate-800/80 border border-slate-700/80 p-3.5 rounded-xl space-y-1">
-            <div className="text-[10px] font-extrabold text-purple-400">3. AI SIGNAL DERIVED</div>
-            <div className="font-extrabold text-white">Intelligence Signal</div>
-            <div className="text-[11px] text-slate-400">myPricing Interest: HIGH INTENT</div>
-          </div>
-
-          {/* Step 4 */}
-          <div className="bg-slate-800/80 border border-slate-700/80 p-3.5 rounded-xl space-y-1">
-            <div className="text-[10px] font-extrabold text-blue-400">4. FEEDS SEGMENTATION</div>
-            <div className="font-extrabold text-white">Audience & Activation</div>
-            <div className="text-[11px] text-slate-400">myPricing Prospects (1,240 match)</div>
-          </div>
-
-        </div>
-      </div>
-
       {/* 3. EVENT STREAM TABLE & CONTROLS */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
         

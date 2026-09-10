@@ -6,7 +6,6 @@ import CustomerTabs from './components/CustomerTabs';
 import PrimaryDecisionBlock from './components/PrimaryDecisionBlock';
 import UnifiedTimeline from './components/UnifiedTimeline';
 import RightSidebar from './components/RightSidebar';
-import ValuePropBanner from './components/ValuePropBanner';
 import InteractionsTab from './components/InteractionsTab';
 import CommercialUsageTab from './components/CommercialUsageTab';
 import AttributesTab from './components/AttributesTab';
@@ -272,9 +271,6 @@ export default function App() {
                       </div>
 
                     </div>
-
-                    {/* VALUE PROPOSITION PARADIGM BANNER (OVERVIEW ONLY) */}
-                    <ValuePropBanner />
                   </div>
                 ) : activeTab === "Interactions" ? (
                   <InteractionsTab 
