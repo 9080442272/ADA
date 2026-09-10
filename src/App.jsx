@@ -177,35 +177,30 @@ export default function App() {
           {/* 1. TOP BAR */}
           <Header />
 
-          {/* UNIFIED CUSTOMER 360 HEADER & TABS BAR (ALL 10 CAPABILITIES) */}
+          {/* UNIFIED CUSTOMER 360 TABS BAR (FIXED POSITION DIRECTLY BELOW APP HEADER - ZERO JUMPINESS) */}
           {activeSubTab !== "People" && (
-            <div className="space-y-3">
-              {/* Render Customer Profile Header for Account 360 views */}
-              {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
-                <div className="px-6 pt-4 max-w-7xl mx-auto w-full">
-                  <CustomerHeader 
-                    customer={customer}
-                    onStartConversation={() => setIsStartChatOpen(true)}
-                    onActionSelect={handleHeaderActionSelect}
-                    onBackToPeople={() => setActiveSubTab("People")}
-                  />
-                </div>
-              )}
-
-              {/* ALL 10 TABS STRIP (Overview, Interactions, Commercial, Attributes, Segments, Events, Tags & DNC, Duplicates, Data Sources, Compliance) */}
-              <CustomerTabs 
-                activeTab={activeSubTab} 
-                onSelectTab={(tab) => {
-                  setActiveTab(tab);
-                  setActiveSubTab(tab);
-                }} 
-              />
-            </div>
+            <CustomerTabs 
+              activeTab={activeSubTab} 
+              onSelectTab={(tab) => {
+                setActiveTab(tab);
+                setActiveSubTab(tab);
+              }} 
+            />
           )}
 
           {/* MAIN PAGE DECISION-ORIENTED CONTENT HIERARCHY */}
           <main className="p-6 max-w-7xl w-full mx-auto space-y-6">
             
+            {/* Render Customer Profile Header for Account 360 profile views (Overview, Interactions, Commercial, Attributes) */}
+            {["Overview", "Interactions", "Commercial & Usage", "Attributes"].includes(activeSubTab) && (
+              <CustomerHeader 
+                customer={customer}
+                onStartConversation={() => setIsStartChatOpen(true)}
+                onActionSelect={handleHeaderActionSelect}
+                onBackToPeople={() => setActiveSubTab("People")}
+              />
+            )}
+
             {activeSubTab === "People" ? (
               <PeopleView 
                 customer={customer} 
