@@ -21,6 +21,7 @@ import DataSourcesView from './components/cdp/DataSourcesView';
 import ComplianceView from './components/cdp/ComplianceView';
 import EventsView from './components/cdp/EventsView';
 import GlobalAttributesView from './components/cdp/GlobalAttributesView';
+import ChannelsView from './components/cdp/ChannelsView';
 
 // Modals
 import ActionModal from './components/modals/ActionModal';
@@ -192,7 +193,7 @@ export default function App() {
                 }}
                 onShowToast={showToast}
               />
-            ) : ["Global_Attributes", "Segments", "Events", "Tags & DNC", "Duplicates", "Data Sources", "Compliance & GDPR"].includes(activeSubTab) ? (
+            ) : ["Global_Attributes", "Segments", "Events", "Tags & DNC", "Duplicates", "Data Sources", "Compliance & GDPR", "Channels"].includes(activeSubTab) ? (
               <div>
                 {activeSubTab === "Global_Attributes" && <GlobalAttributesView customer={customer} onShowToast={showToast} />}
                 {activeSubTab === "Segments" && <SegmentsView customer={customer} onShowToast={showToast} />}
@@ -213,6 +214,13 @@ export default function App() {
                 {activeSubTab === "Duplicates" && <DuplicatesView customer={customer} onShowToast={showToast} />}
                 {activeSubTab === "Data Sources" && <DataSourcesView customer={customer} onShowToast={showToast} />}
                 {activeSubTab === "Compliance & GDPR" && <ComplianceView customer={customer} onShowToast={showToast} />}
+                {activeSubTab === "Channels" && (
+                  <ChannelsView 
+                    customer={customer} 
+                    onShowToast={showToast} 
+                    onNavigateToSegments={() => setActiveSubTab("Segments")}
+                  />
+                )}
               </div>
             ) : (
               <div className="space-y-5">
